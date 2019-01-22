@@ -1,0 +1,47 @@
+apply plugin: 'com.android.library'
+apply plugin: 'kotlin-android'
+
+android {
+
+  def androidConfig = rootProject.ext.android
+
+  compileSdkVersion androidConfig.compileSdkVersion
+
+
+  defaultConfig {
+    minSdkVersion androidConfig.minSdkVersion
+    targetSdkVersion androidConfig.targetSdkVersion
+    versionCode 1
+    versionName "1.0"
+
+    testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+  }
+
+  buildTypes {
+    release {
+      minifyEnabled false
+      proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+    }
+  }
+  compileOptions {
+    sourceCompatibility JavaVersion.VERSION_1_8
+    targetCompatibility JavaVersion.VERSION_1_8
+  }
+}
+
+dependencies {
+  implementation fileTree(dir: 'libs', include: ['*.jar'])
+  api commonDependencies.timber
+  api commonDependencies.gson
+  api commonDependencies.rxJava2
+  api commonDependencies.options
+  api commonDependencies.guava
+  api commonDependencies.bouncyCastle
+  testImplementation 'junit:junit:4.12'
+  androidTestImplementation commonTestDependencies.testRunner
+  androidTestImplementation commonTestDependencies.espresso
+  api "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+}
+repositories {
+  mavenCentral()
+}

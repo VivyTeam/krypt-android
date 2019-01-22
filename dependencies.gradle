@@ -1,0 +1,33 @@
+allprojects {
+  repositories {
+    google()
+    jcenter()
+    maven { url 'https://maven.google.com' }
+    maven { url "https://jitpack.io" }
+  }
+}
+
+ext {
+  timber = '4.7.1'
+  gson = '2.8.5'
+  rxJava2 = '2.2.0'
+  options = '1.3.0'
+  guava = '26.0-android'
+  bouncyCastle = '1.60'
+  testRunner = '1.0.2'
+  espresso = '3.1.0-alpha1'
+  androidX = '1.1.0'
+
+
+  commonDependencies = [timber      : "com.jakewharton.timber:timber:${timber}",
+                        gson        : "com.google.code.gson:gson:${gson}",
+                        rxJava2     : "io.reactivex.rxjava2:rxjava:${rxJava2}",
+                        options     : "com.github.tomaszpolanski:options:${options}",
+                        guava       : "com.google.guava:guava:$guava",
+                        bouncyCastle: "org.bouncycastle:bcmail-jdk15on:${bouncyCastle}",]
+
+  commonTestDependencies = [testRunner: "androidx.test:runner:$androidX",
+                            espresso  : "androidx.test.espresso:espresso-core:${espresso}"
+
+  ]
+}
