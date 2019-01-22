@@ -30,6 +30,8 @@ ext {
                         bouncyCastle: "org.bouncycastle:bcmail-jdk15on:${bouncyCastle}",]
 
   commonTestDependencies = [testRunner: "androidx.test:runner:$androidX",
+                            testRules           : "androidx.test:rules:$androidX",
+                            espressoIdlingResources : "androidx.test.espresso:espresso-idling-resource:${espresso}",
                             espresso  : "androidx.test.espresso:espresso-core:${espresso}"
 
   ]
