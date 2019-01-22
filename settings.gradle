@@ -1,1 +1,1 @@
-include ':app', ':vivy_encrytpor'
+include ':app', ':vivy_encryptor'
