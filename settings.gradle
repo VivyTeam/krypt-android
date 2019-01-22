@@ -1,1 +1,1 @@
-include ':app', ':vivy_encryptor'
+include ':sample', ':vivy_encryptor'
