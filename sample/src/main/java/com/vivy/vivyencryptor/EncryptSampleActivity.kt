@@ -8,6 +8,7 @@ import android.view.View
 import android.view.inputmethod.InputMethodManager
 import androidx.appcompat.app.AppCompatActivity
 import androidx.test.espresso.idling.CountingIdlingResource
+import com.vivy.e2e.E2EEncryption
 import com.vivy.e2e.E2EEncryption.Encrypted
 import com.vivy.e2e.VivyEncryption
 import com.vivy.support.EncryptionBase64
@@ -22,6 +23,7 @@ import kotlinx.android.synthetic.main.activity_encryptor.encryptedText
 import kotlinx.android.synthetic.main.activity_encryptor.planText
 import java.security.KeyPair
 import java.security.KeyPairGenerator
+import java.security.PrivateKey
 import java.security.PublicKey
 
 class EncryptSampleActivity : AppCompatActivity() {
@@ -29,6 +31,8 @@ class EncryptSampleActivity : AppCompatActivity() {
     private val compositeDisposable: CompositeDisposable = CompositeDisposable()
 
     private var testKey: KeyPair? = null
+
+    private var encrypted: Encrypted? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -67,40 +71,46 @@ class EncryptSampleActivity : AppCompatActivity() {
         }
         decryptAction.setOnClickListener {
             testKey?.let {
-                decryptedText.text
                 encrypted?.let {
                     countingIdlingResource.increment()
-                    compositeDisposable.add(
-                        Observable
-                            .just(it)
-                            .map {
-                                VivyEncryption().decrypt(testKey!!.private, it)
-                            }.subscribeOn(Schedulers.computation())
-                            .observeOn(AndroidSchedulers.mainThread()).subscribe {
-                                decryptedText.text = "Decrypted Text: ${String(it)}"
-                                countingIdlingResource.decrement()
-                            }
+                    Observable
+                        .just(it)
+                        .map {
 
-                    )
+                            decrypt(it, testKey!!.private)
+
+                        }
+                        .subscribeOn(Schedulers.computation())
+                        .doOnSubscribe { compositeDisposable.add(it) }
+                        .observeOn(AndroidSchedulers.mainThread()).subscribe {
+                            decryptedText.text = "Decrypted Text: ${String(it)}"
+                            countingIdlingResource.decrement()
+                        }
                 }
             }
         }
     }
 
-    private var encrypted: Encrypted? = null
+    private fun decrypt(
+        encryptedPayload: E2EEncryption.Encrypted,
+        privateKey: PrivateKey
+    ): ByteArray = VivyEncryption().decrypt(privateKey, encryptedPayload) //decrypting
 
+
+    @SuppressLint("CheckResult")
     private fun encryptAndPrint(
         text: String,
         publicKey: PublicKey
     ) {
         countingIdlingResource.increment()
 
-        compositeDisposable.add(Observable.just(text.toByteArray())
+        Observable.just(text.toByteArray())
 
             .map { VivyEncryption().encrypt(publicKey, it) }
 
             .subscribeOn(Schedulers.computation())
             .observeOn(AndroidSchedulers.mainThread())
+            .doOnSubscribe { compositeDisposable.add(it) }
             .subscribe {
                 val output = StringBuilder()
                 output.appendln("Encrypted payload base64: ${EncryptionBase64.base64(it.data)}\n")
@@ -113,10 +123,10 @@ class EncryptSampleActivity : AppCompatActivity() {
                 encrypted = it
 
                 countingIdlingResource.decrement()
-            })
+            }
     }
 
-    fun hideKeyboardFrom(
+    private fun hideKeyboardFrom(
         context: Context,
         view: View
     ) {
@@ -125,7 +135,7 @@ class EncryptSampleActivity : AppCompatActivity() {
     }
 
     companion object {
-        val countingIdlingResource = CountingIdlingResource(EncryptSampleActivity::class.java.name,BuildConfig.DEBUG)
+        val countingIdlingResource = CountingIdlingResource(EncryptSampleActivity::class.java.name, BuildConfig.DEBUG)
     }
 
 }
