@@ -27,7 +27,7 @@ ext {
                         rxJava2     : "io.reactivex.rxjava2:rxjava:${rxJava2}",
                         options     : "com.github.tomaszpolanski:options:${options}",
                         guava       : "com.google.guava:guava:$guava",
-                        bouncyCastle: "org.bouncycastle:bcmail-jdk15on:${bouncyCastle}",]
+                        bouncyCastle: "org.bouncycastle:bcpkix-jdk15on:${bouncyCastle}",]
 
   commonTestDependencies = [testRunner: "androidx.test:runner:$androidX",
                             testRules           : "androidx.test:rules:$androidX",
