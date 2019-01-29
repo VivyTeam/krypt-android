@@ -51,7 +51,6 @@ object ScryptEncryption {
             PARALLELIZATION_PARAM,
             DKLENFORSKEY
         )
-
         val iv = SCryptKeyGenerator.getGenSCryptKey(
             genSCryptKey,
             pin.toByteArray(),
@@ -61,7 +60,7 @@ object ScryptEncryption {
             DKLENFORIV
         )
 
-        return aesCbcPkcs7.decrypt(encryptedData, genSCryptKey, iv)
+        return gzip.gunzip(aesCbcPkcs7.decrypt(encryptedData, genSCryptKey, iv))
     }
 
 

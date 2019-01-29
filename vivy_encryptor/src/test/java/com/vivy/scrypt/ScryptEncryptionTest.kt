@@ -4,7 +4,6 @@ import org.assertj.core.api.Assertions.assertThat
 import org.bouncycastle.jce.provider.BouncyCastleProvider
 import org.junit.Test
 import java.security.Security
-import java.util.Arrays
 
 class ScryptEncryptionTest {
 
@@ -14,7 +13,7 @@ class ScryptEncryptionTest {
     }
 
     @Test
-    fun verifyEncryptionWorks(){
+    fun `encryption decryption test`(){
         val pin = "yzuygF6M"
         val salt = "yeeXCYff"
         val secret = "secret"
@@ -42,7 +41,5 @@ class ScryptEncryptionTest {
 
         assertThat(String(decrypted))
             .isEqualTo(secret)
-
-
     }
 }
