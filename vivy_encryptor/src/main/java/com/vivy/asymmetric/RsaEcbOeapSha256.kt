@@ -2,6 +2,7 @@ package com.vivy.asymmetric
 
 import com.vivy.asymmetric.RsaOperationHelper.rsaOperation
 import com.vivy.support.EncryptionBase64
+import java.lang.Exception
 import java.nio.charset.StandardCharsets
 import java.security.NoSuchAlgorithmException
 import java.security.PrivateKey
@@ -28,14 +29,11 @@ class RsaEcbOeapSha256 : AsymmetricEncryption {
         get() {
             try {
                 return Cipher.getInstance("RSA/ECB/OAEPWITHSHA-256ANDMGF1PADDING")
-            } catch (e: NoSuchAlgorithmException) {
+            } catch (e: Exception) {
                 throw IllegalStateException(
                     "Failed to get cipher algorithm: RSA/ECB/OAEPWITHSHA-256ANDMGF1PADDING", e
                 )
-            } catch (e: NoSuchPaddingException) {
-                throw IllegalStateException("Failed to get cipher algorithm: RSA/ECB/OAEPWITHSHA-256ANDMGF1PADDING", e)
             }
-
         }
 
     override fun encryptText(
