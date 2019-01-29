@@ -1,12 +1,17 @@
 package com.vivy.scrypt
 
 import org.assertj.core.api.Assertions.assertThat
+import org.bouncycastle.jce.provider.BouncyCastleProvider
 import org.junit.Test
+import java.security.Security
 import java.util.Arrays
 
 class ScryptEncryptionTest {
 
 
+    init {
+        Security.addProvider(BouncyCastleProvider())
+    }
 
     @Test
     fun verifyEncryptionWorks(){
@@ -18,7 +23,7 @@ class ScryptEncryptionTest {
         assertThat(scryptData)
             .extracting { it.pin }.isEqualTo(pin)
         assertThat(scryptData)
-            .extracting { it.salt }.isEqualTo(pin)
+            .extracting { it.salt }.isEqualTo(salt)
 
         assertThat(scryptData)
             .extracting { it.encryptedData }
@@ -35,8 +40,9 @@ class ScryptEncryptionTest {
 
         val decrypted=ScryptEncryption.decrypt(pin,salt,scryptData.encryptedData)
 
-        assertThat(Arrays.equals(decrypted,secret.toByteArray()))
-            .isTrue()
+        assertThat(String(decrypted))
+            .isEqualTo(secret)
+
 
     }
 }
