@@ -43,6 +43,7 @@ dependencies {
   testImplementation 'junit:junit:4.12'
   androidTestImplementation commonTestDependencies.testRunner
   androidTestImplementation commonTestDependencies.espresso
+  androidTestImplementation commonTestDependencies.assertj
   api "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
 }
 repositories {

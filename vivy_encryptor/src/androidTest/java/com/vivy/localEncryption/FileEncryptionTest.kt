@@ -1,5 +1,6 @@
 package com.vivy.localEncryption
 
+import com.vivy.support.KeyGenerator
 import com.vivy.support.KeyProvider
 import io.reactivex.Single
 import org.junit.Assert.assertNotEquals
@@ -21,9 +22,7 @@ class FileEncryptionTest {
     }
 
     private fun generateRandomTestKey(): KeyProvider {
-        val keyGen = KeyPairGenerator.getInstance("RSA")
-        keyGen.initialize(1024)
-        val smallKeypair = keyGen.generateKeyPair()
+        val smallKeypair = KeyGenerator.generateKeyPair()
         return object : KeyProvider {
             override fun getPrivateKey(): Single<PrivateKey> {
                 return Single.just(smallKeypair.private)

@@ -20,8 +20,8 @@ interface E2EEncryption {
 
     data class Encrypted(
         @SerializedName("data") var data: ByteArray,
-        @SerializedName("compression") var compression: String,
         @SerializedName("cipher") var cipher: String,
         @SerializedName("version") var version: String
     )
+
 }
