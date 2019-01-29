@@ -10,8 +10,9 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.test.espresso.idling.CountingIdlingResource
 import com.vivy.e2e.E2EEncryption
 import com.vivy.e2e.E2EEncryption.Encrypted
-import com.vivy.e2e.VivyEncryption
+import com.vivy.e2e.EHREncryption
 import com.vivy.support.EncryptionBase64
+import com.vivy.support.Gzip
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
@@ -33,7 +34,7 @@ class EncryptSampleActivity : AppCompatActivity() {
     private var testKey: KeyPair? = null
 
     private var encrypted: Encrypted? = null
-
+    val gzip = Gzip()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_encryptor)
@@ -94,7 +95,8 @@ class EncryptSampleActivity : AppCompatActivity() {
     private fun decrypt(
         encryptedPayload: E2EEncryption.Encrypted,
         privateKey: PrivateKey
-    ): ByteArray = VivyEncryption().decrypt(privateKey, encryptedPayload) //decrypting
+    ): ByteArray = gzip.gunzip(EHREncryption().decrypt(privateKey, encryptedPayload))
+         //decrypting
 
 
     @SuppressLint("CheckResult")
@@ -106,7 +108,9 @@ class EncryptSampleActivity : AppCompatActivity() {
 
         Observable.just(text.toByteArray())
 
-            .map { VivyEncryption().encrypt(publicKey, it) }
+            .map { gzip.gzip(it) }
+
+            .map { EHREncryption().encrypt(publicKey, it) }
 
             .subscribeOn(Schedulers.computation())
             .observeOn(AndroidSchedulers.mainThread())

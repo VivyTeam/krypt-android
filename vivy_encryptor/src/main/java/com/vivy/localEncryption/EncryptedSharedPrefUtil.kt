@@ -4,8 +4,9 @@ import android.content.SharedPreferences
 import com.google.common.base.Optional
 import com.google.gson.GsonBuilder
 import com.vivy.e2e.E2EEncryption.Encrypted
-import com.vivy.e2e.VivyEncryption
+import com.vivy.e2e.EHREncryption
 import com.vivy.support.EncryptionBase64
+import com.vivy.support.Gzip
 import com.vivy.support.KeyProvider
 import io.reactivex.Completable
 import io.reactivex.Observable
@@ -24,9 +25,10 @@ open class EncryptedSharedPrefUtil(
     private val GSON = GsonBuilder()
         .disableHtmlEscaping()
         .create()
-    internal val base64 = EncryptionBase64
-    private val encrypt: VivyEncryption by lazy {
-                VivyEncryption()
+    private val gzip = Gzip()
+    private val base64 = EncryptionBase64
+    private val encrypt: EHREncryption by lazy {
+                EHREncryption()
     }
 
     fun update(
@@ -62,8 +64,7 @@ open class EncryptedSharedPrefUtil(
             encrypted?.let {
 
                 decrypt(it)
-            } ?:
-                Single.just(Optional.absent())
+            } ?: Single.just(Optional.absent())
         }
     }
 
@@ -87,6 +88,7 @@ open class EncryptedSharedPrefUtil(
             .map {
                 GSON.fromJson(it, Encrypted::class.java) }
             .zipWith(keyProvider.privateKey, BiFunction<Encrypted, PrivateKey, ByteArray> { encrypted, privateKey -> encrypt.decrypt(privateKey, encrypted) })
+            .map { gzip.gunzip(it) }
             .map { Optional.fromNullable(String(it)) }
             .onErrorReturnItem(Optional.absent())
             .doOnError { Timber.d(it) }
@@ -96,6 +98,7 @@ open class EncryptedSharedPrefUtil(
     fun encrypt(planText: String): Observable<String> {
         return Observable.just(planText)
             .map { it.toByteArray() }
+            .map { gzip.gzip(it) }
             .zipWith(keyProvider.publicKey.toObservable(), BiFunction<ByteArray, PublicKey, Encrypted> { bytes, pubKey ->
                 encrypt.encrypt(pubKey, bytes)
             })

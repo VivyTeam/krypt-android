@@ -3,10 +3,10 @@ package com.vivy.e2e
 import java.security.PrivateKey
 import java.security.PublicKey
 
-class VivyEncryption : E2EEncryption {
+class EHREncryption : E2EEncryption {
 
-     private val rsaEcbOeapSha256AesGcmNoPadding: E2EEncryption = RsaEcbOeapSha256AesGcmNoPadding()
-     private val rsaEcbPkcs1AesCbcPkcs7: E2EEncryption = RsaEcbPkcs1AesCbcPkcs7()
+    private val rsaEcbOeapSha256AesGcmNoPadding: E2EEncryption = RsaEcbOeapSha256AesGcmNoPadding()
+    private val rsaEcbPkcs1AesCbcPkcs7: E2EEncryption = RsaEcbPkcs1AesCbcPkcs7()
 
     override val version: String
         get() = rsaEcbOeapSha256AesGcmNoPadding.version
@@ -29,4 +29,11 @@ class VivyEncryption : E2EEncryption {
             rsaEcbPkcs1AesCbcPkcs7.decrypt(privateKey, encrypted)
         }
     }
+
+
+    infix fun setDebugModeTo(debug:Boolean){
+        (this.rsaEcbOeapSha256AesGcmNoPadding as? AbstractAsymmetricSymmetricEncryption)?.setDebugModeTo(debug)
+        (this.rsaEcbPkcs1AesCbcPkcs7 as? AbstractAsymmetricSymmetricEncryption)?.setDebugModeTo(debug)
+    }
+
 }
