@@ -41,6 +41,7 @@ object ScryptEncryption {
     }
 
     fun decrypt(pin:String,salt:String,encryptedData: ByteArray):ByteArray{
+
         val genSCryptKey = SCryptKeyGenerator.getGenSCryptKey(
             pin.toByteArray(),
             salt.toByteArray(),
@@ -51,8 +52,8 @@ object ScryptEncryption {
         )
 
         val iv = SCryptKeyGenerator.getGenSCryptKey(
-            pin.toByteArray(),
             genSCryptKey,
+            pin.toByteArray(),
             CPU_COST,
             MEMORY_COST,
             PARALLELIZATION_PARAM,

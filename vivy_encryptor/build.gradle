@@ -30,6 +30,7 @@ android {
   lintOptions {
     warning 'InvalidPackage'
   }
+
 }
 
 dependencies {
@@ -40,6 +41,7 @@ dependencies {
   api commonDependencies.options
   api commonDependencies.guava
   api commonDependencies.bouncyCastle
+  implementation commonDependencies.scrypt
   testImplementation 'junit:junit:4.12'
   androidTestImplementation commonTestDependencies.testRunner
   androidTestImplementation commonTestDependencies.espresso
