@@ -1,15 +1,19 @@
 package com.vivy.scrypt
 
 import org.assertj.core.api.Assertions.assertThat
+import org.bouncycastle.jce.provider.BouncyCastleProvider
 import org.junit.Test
-import java.util.Arrays
+import java.security.Security
 
 class ScryptEncryptionTest {
 
 
+    init {
+        Security.addProvider(BouncyCastleProvider())
+    }
 
     @Test
-    fun verifyEncryptionWorks(){
+    fun `encryption decryption test`(){
         val pin = "yzuygF6M"
         val salt = "yeeXCYff"
         val secret = "secret"
@@ -30,8 +34,7 @@ class ScryptEncryptionTest {
 
         val decrypted=ScryptEncryption.decrypt(pin,salt,scryptData.encryptedData)
 
-        assertThat(Arrays.equals(decrypted,secret.toByteArray()))
-            .isTrue()
-
+        assertThat(String(decrypted))
+            .isEqualTo(secret)
     }
 }

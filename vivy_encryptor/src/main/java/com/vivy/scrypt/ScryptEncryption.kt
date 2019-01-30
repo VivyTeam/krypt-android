@@ -13,6 +13,7 @@ object ScryptEncryption {
     private const val DKLENFORIV = 16 //Intended length of the derived key.
 
     val aesCbcPkcs7 = AesCbcPkcs7()
+
     fun encrypt(
         pin: String,
         salt: String,
@@ -50,7 +51,6 @@ object ScryptEncryption {
             PARALLELIZATION_PARAM,
             DKLENFORSKEY
         )
-
         val iv = SCryptKeyGenerator.getGenSCryptKey(
             genSCryptKey,
             pin.toByteArray(),
@@ -60,7 +60,7 @@ object ScryptEncryption {
             DKLENFORIV
         )
 
-        return aesCbcPkcs7.decrypt(encryptedData, genSCryptKey, iv)
+        return gzip.gunzip(aesCbcPkcs7.decrypt(encryptedData, genSCryptKey, iv))
     }
 
 
