@@ -36,7 +36,7 @@ object ScryptEncryption {
         )
         val encryptedData = aesCbcPkcs7.encrypt(gzip.gzip(data), genSCryptKey, iv)
 
-        return ScryptData(pin, salt, genSCryptKey, iv, encryptedData)
+        return ScryptData(genSCryptKey, iv, encryptedData)
 
     }
 

@@ -30,13 +30,6 @@ class RsaEcbPkcs1 : AsymmetricEncryption {
         publicKey: PublicKey,
         decryptedText: String
     ): String {
-        val id = UUID.randomUUID().toString()
-        val startMs = System.currentTimeMillis()
-        Timber.d(
-            "process=encryptText, id=%s, status=initialize, keyclass='%s'", id,
-            publicKey.javaClass.name
-        )
-
         val encryptedBytes = rsaOperation(
             {
                 val cipher = rsaCipher
@@ -46,10 +39,6 @@ class RsaEcbPkcs1 : AsymmetricEncryption {
             decryptedText.toByteArray(StandardCharsets.UTF_8)
         )
 
-        Timber.d(
-            "process=encryptText, id=%s, status=ends, timeMs=%s, keyclass='%s', text='%s'",
-            id, System.currentTimeMillis() - startMs, publicKey.javaClass.name, decryptedText
-        )
 
         return base64.base64(encryptedBytes)
     }

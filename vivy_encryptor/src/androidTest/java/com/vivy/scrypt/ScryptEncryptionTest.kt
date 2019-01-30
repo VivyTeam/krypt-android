@@ -16,11 +16,6 @@ class ScryptEncryptionTest {
         val scryptData=ScryptEncryption.encrypt(pin,salt,secret.toByteArray())
 
         assertThat(scryptData)
-            .extracting { it.pin }.isEqualTo(pin)
-        assertThat(scryptData)
-            .extracting { it.salt }.isEqualTo(pin)
-
-        assertThat(scryptData)
             .extracting { it.encryptedData }
             .isNotEqualTo(secret.toByteArray())
 
