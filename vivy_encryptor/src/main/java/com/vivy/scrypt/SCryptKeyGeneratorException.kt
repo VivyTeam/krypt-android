@@ -1,3 +1,3 @@
 package com.vivy.scrypt
 
-object SCryptKeyGeneratorException : Throwable()
+class SCryptKeyGeneratorException(throwable: Throwable?) : Throwable(throwable)

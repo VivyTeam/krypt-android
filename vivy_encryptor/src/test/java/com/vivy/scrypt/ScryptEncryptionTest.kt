@@ -1,7 +1,10 @@
 package com.vivy.scrypt
 
+
+import org.assertj.core.api.Assertions
 import org.assertj.core.api.Assertions.assertThat
 import org.bouncycastle.jce.provider.BouncyCastleProvider
+import org.junit.Before
 import org.junit.Test
 import java.security.Security
 
@@ -12,12 +15,18 @@ class ScryptEncryptionTest {
         Security.addProvider(BouncyCastleProvider())
     }
 
+    val service=ScryptEncryption
+    @Before
+    fun setup(){
+        service setDebugTo false
+    }
+
     @Test
     fun `encryption decryption test`(){
         val pin = "yzuygF6M"
         val salt = "yeeXCYff"
         val secret = "secret"
-        val scryptData=ScryptEncryption.encrypt(pin,salt,secret.toByteArray())
+        val scryptData=service.encrypt(pin,salt,secret.toByteArray())
 
         assertThat(scryptData)
             .extracting { it.encryptedData }
@@ -32,9 +41,10 @@ class ScryptEncryptionTest {
             .isNotNull()
 
 
-        val decrypted=ScryptEncryption.decrypt(pin,salt,scryptData.encryptedData)
+        val decrypted=service.decrypt(pin,salt,scryptData.encryptedData)
 
         assertThat(String(decrypted))
             .isEqualTo(secret)
     }
+
 }

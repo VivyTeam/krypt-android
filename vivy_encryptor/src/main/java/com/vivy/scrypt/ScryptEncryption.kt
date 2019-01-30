@@ -4,7 +4,7 @@ import com.vivy.support.Gzip
 import com.vivy.symmetric.AesCbcPkcs7
 
 object ScryptEncryption {
-
+    var debug: Boolean = false
     val gzip = Gzip()
     private const val CPU_COST = 16384
     private const val MEMORY_COST = 8
@@ -37,11 +37,18 @@ object ScryptEncryption {
         )
         val encryptedData = aesCbcPkcs7.encrypt(gzip.gzip(data), genSCryptKey, iv)
 
-        return ScryptData(genSCryptKey, iv, encryptedData)
-
+        try {
+            return ScryptData(genSCryptKey, iv, encryptedData)
+        } catch (e: Exception) {
+            throw ScryptEncryptionError(if (debug) e else null)
+        }
     }
 
-    fun decrypt(pin:String,salt:String,encryptedData: ByteArray):ByteArray{
+    fun decrypt(
+        pin: String,
+        salt: String,
+        encryptedData: ByteArray
+    ): ByteArray {
 
         val genSCryptKey = SCryptKeyGenerator.getGenSCryptKey(
             pin.toByteArray(),
@@ -60,8 +67,16 @@ object ScryptEncryption {
             DKLENFORIV
         )
 
-        return gzip.gunzip(aesCbcPkcs7.decrypt(encryptedData, genSCryptKey, iv))
+        try {
+            return gzip.gunzip(aesCbcPkcs7.decrypt(encryptedData, genSCryptKey, iv))
+        } catch (e: Exception) {
+            throw ScryptEncryptionError(if (debug) e else null)
+        }
     }
 
-
+    infix fun setDebugTo(debug: Boolean) {
+        this.debug = debug
+    }
 }
+
+class ScryptEncryptionError(throwable: Throwable?) : Throwable(throwable)
