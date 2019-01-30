@@ -17,7 +17,6 @@ ext {
   testRunner = '1.0.2'
   espresso = '3.1.0-alpha1'
   androidX = '1.1.0'
-  scrypt = '1.4.0'
   rxAndroid = '2.0.2'
   assertJ = '3.11.1'
 
@@ -28,7 +27,6 @@ ext {
                         rxJava2     : "io.reactivex.rxjava2:rxjava:${rxJava2}",
                         options     : "com.github.tomaszpolanski:options:${options}",
                         guava       : "com.google.guava:guava:$guava",
-                        scrypt      : "com.lambdaworks:scrypt:${scrypt}",
                         bouncyCastle: "org.bouncycastle:bcpkix-jdk15on:${bouncyCastle}",]
 
   commonTestDependencies = [testRunner             : "androidx.test:runner:$androidX",
