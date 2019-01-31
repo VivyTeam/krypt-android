@@ -1,7 +1,6 @@
-package com.vivy.scrypt
+package com.vivy.medicalSticker
 
-
-object SCryptKeyGenerator {
+object MedStickerKeyGenerator {
     var debug: Boolean = false
     fun getGenSCryptKey(
         pin: ByteArray,
@@ -9,7 +8,7 @@ object SCryptKeyGenerator {
         cpuCost: Int = 16384,
         memoryCost: Int = 8,
         parallelizationParam: Int = 1,
-        dkLen: Int = 32//Intended length of the derived key.
+        dkLen: Int = 32
     ): ByteArray {
         try {
             return org.bouncycastle.crypto.generators.SCrypt.generate(pin,salt,cpuCost,memoryCost,parallelizationParam,dkLen)
@@ -22,3 +21,4 @@ object SCryptKeyGenerator {
         this.debug = debug
     }
 }
+class SCryptKeyGeneratorException(throwable: Throwable?) : Throwable(throwable)
