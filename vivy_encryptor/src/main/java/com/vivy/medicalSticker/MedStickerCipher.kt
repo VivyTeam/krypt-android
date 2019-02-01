@@ -1,6 +1,6 @@
 package com.vivy.medicalSticker
 
-data class MedStickerKey(
+data class MedStickerCipher(
     val key: ByteArray,
     val iv: ByteArray,
     val version: String = BRITNEY

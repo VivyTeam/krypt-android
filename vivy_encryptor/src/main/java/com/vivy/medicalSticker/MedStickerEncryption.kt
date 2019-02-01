@@ -24,7 +24,7 @@ object MedStickerEncryption {
         code: String,
         pin: String,
         data: ByteArray
-    ): EncryptedMedSticker = MedStickerEncryption.encrypt(code, pin, data, MedStickerKey.BRITNEY)
+    ): EncryptedMedSticker = MedStickerEncryption.encrypt(code, pin, data, MedStickerCipher.BRITNEY)
 
     internal fun encrypt(
         code: String,
@@ -35,8 +35,8 @@ object MedStickerEncryption {
         val medKey = deriveKey(code, pin, version)
         try {
             val encryptedData = when (version) {
-                MedStickerKey.BRITNEY -> gcmNoPadding.encrypt(gzip.gzip(data), medKey.key, medKey.iv)
-                MedStickerKey.ADAM -> aesCbcPkcs7.encrypt(gzip.gzip(data), medKey.key, medKey.iv)
+                MedStickerCipher.BRITNEY -> gcmNoPadding.encrypt(gzip.gzip(data), medKey.key, medKey.iv)
+                MedStickerCipher.ADAM -> aesCbcPkcs7.encrypt(gzip.gzip(data), medKey.key, medKey.iv)
                 else -> throw UnsupportedOperationException("unsupported version used")
             }
             return EncryptedMedSticker(encryptedData, medKey)
@@ -46,13 +46,13 @@ object MedStickerEncryption {
     }
 
     fun decrypt(
-        medStickerKey: MedStickerKey,
+        medStickerCipher: MedStickerCipher,
         encryptedData: ByteArray
     ): ByteArray {
         try {
-            return when (medStickerKey.version) {
-                MedStickerKey.BRITNEY -> gzip.gunzip(gcmNoPadding.decrypt(encryptedData, medStickerKey.key, medStickerKey.iv))
-                else -> gzip.gunzip(aesCbcPkcs7.decrypt(encryptedData, medStickerKey.key, medStickerKey.iv))
+            return when (medStickerCipher.version) {
+                MedStickerCipher.BRITNEY -> gzip.gunzip(gcmNoPadding.decrypt(encryptedData, medStickerCipher.key, medStickerCipher.iv))
+                else -> gzip.gunzip(aesCbcPkcs7.decrypt(encryptedData, medStickerCipher.key, medStickerCipher.iv))
             }
 
         } catch (e: Exception) {
@@ -64,13 +64,13 @@ object MedStickerEncryption {
         code: String,
         pin: String,
         version: String
-    ): MedStickerKey {
+    ): MedStickerCipher {
 
         val key = generateKey(code, pin, version)
 
         val iv = generateIV(key, pin, version)
 
-        return MedStickerKey(key, iv, version)
+        return MedStickerCipher(key, iv, version)
     }
 
     internal fun generateIV(
@@ -90,7 +90,7 @@ object MedStickerEncryption {
 
     internal fun getMemoryCost(version: String): Int {
         return when (version) {
-            MedStickerKey.BRITNEY -> MEMORY_COST_BRITNEY
+            MedStickerCipher.BRITNEY -> MEMORY_COST_BRITNEY
             else -> MEMORY_COST_ADAM
         }
     }
@@ -126,9 +126,9 @@ object MedStickerEncryption {
     }
 
     fun accessSignature(
-        medStickerKey: MedStickerKey,
+        medStickerCipher: MedStickerCipher,
         salt: ByteArray
-    ) = signer.accessSignature(medStickerKey, salt)
+    ) = signer.accessSignature(medStickerCipher, salt)
 
     infix fun setDebugTo(debug: Boolean) {
         this.debug = debug

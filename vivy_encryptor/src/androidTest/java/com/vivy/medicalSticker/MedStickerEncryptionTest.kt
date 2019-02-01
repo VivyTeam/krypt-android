@@ -22,13 +22,13 @@ class MedStickerEncryptionTest {
         val code = "yeeXCYff"
         val secret = "secret"
         service setDebugTo true
-        val scryptData = service.encrypt(code, pin, secret.toByteArray(), MedStickerKey.BRITNEY)
+        val scryptData = service.encrypt(code, pin, secret.toByteArray(), MedStickerCipher.BRITNEY)
 
 
         assertThat(Arrays.equals(scryptData.data,secret.toByteArray()))
                 .isFalse()
 
-        val decrypted = service.decrypt(pin, code, scryptData.data, MedStickerKey.BRITNEY)
+        val decrypted = service.decrypt(pin, code, scryptData.data, MedStickerCipher.BRITNEY)
 
         assertThat(String(decrypted))
             .isEqualTo(secret)
@@ -40,12 +40,12 @@ class MedStickerEncryptionTest {
         val code = "yeeXCYff"
         val secret = "secret"
 
-        val scryptData = service.encrypt(code, pin, secret.toByteArray(), MedStickerKey.ADAM)
+        val scryptData = service.encrypt(code, pin, secret.toByteArray(), MedStickerCipher.ADAM)
 
         assertThat(Arrays.equals(scryptData.data,secret.toByteArray()))
                 .isFalse()
 
-        val decrypted = service.decrypt(pin, code, scryptData.data, MedStickerKey.ADAM)
+        val decrypted = service.decrypt(pin, code, scryptData.data, MedStickerCipher.ADAM)
 
         assertThat(String(decrypted))
             .isEqualTo(secret)
@@ -61,7 +61,7 @@ class MedStickerEncryptionTest {
 
         val scryptData = service.encrypt(code, pin, secret.toByteArray())
 
-        assertThatThrownBy { service.decrypt("wrongPin", code, scryptData.data, MedStickerKey.ADAM) }
+        assertThatThrownBy { service.decrypt("wrongPin", code, scryptData.data, MedStickerCipher.ADAM) }
             .isInstanceOf(DecryptionFailed::class.java)
             .hasNoCause()
     }
@@ -76,14 +76,14 @@ class MedStickerEncryptionTest {
 
         val scryptData = service.encrypt(code, pin, secret.toByteArray())
 
-        assertThatThrownBy { service.decrypt("wrongPin", code, scryptData.data, MedStickerKey.BRITNEY) }
+        assertThatThrownBy { service.decrypt("wrongPin", code, scryptData.data, MedStickerCipher.BRITNEY) }
             .isInstanceOf(DecryptionFailed::class.java)
             .hasMessageContaining("Failed to decrypt aes data")
     }
 
     @Test
     fun generateKeyBritneyShouldDriveKeyFromScrypt() {
-        val version = MedStickerKey.BRITNEY
+        val version = MedStickerCipher.BRITNEY
         val key = service.generateKey("code", "pin", version)
         val generatedKey = MedStickerKeyGenerator.getGenSCryptKey(
             "pin".toByteArray(),
@@ -101,7 +101,7 @@ class MedStickerEncryptionTest {
 
     @Test
     fun generateKeyAdamShouldDriveKeyFromScrypt() {
-        val version = MedStickerKey.ADAM
+        val version = MedStickerCipher.ADAM
         val key = service.generateKey("code", "pin", version)
         val generatedKey = MedStickerKeyGenerator.getGenSCryptKey(
             "pin".toByteArray(),
@@ -119,7 +119,7 @@ class MedStickerEncryptionTest {
 
     @Test
     fun generateBritneyIVShouldDriveKeyFromScrypt() {
-        val version = MedStickerKey.BRITNEY
+        val version = MedStickerCipher.BRITNEY
 
         val iv = service.generateIV("secretKey".toByteArray(), "pin", version)
 
@@ -139,7 +139,7 @@ class MedStickerEncryptionTest {
 
     @Test
     fun generateADAMIVShouldDriveKeyFromScrypt() {
-        val version = MedStickerKey.ADAM
+        val version = MedStickerCipher.ADAM
 
         val iv = service.generateIV("secretKey".toByteArray(), "pin", version)
 
@@ -159,7 +159,7 @@ class MedStickerEncryptionTest {
 
     @Test
     fun driveKeyBritneyShouldUsePinAndCodeToDriveTheKey() {
-        val version = MedStickerKey.BRITNEY
+        val version = MedStickerCipher.BRITNEY
 
         val drived = service.deriveKey("yeeXCYff", "yzuygF6M", version)
 
@@ -178,7 +178,7 @@ class MedStickerEncryptionTest {
 
     @Test
     fun driveKeyAdamShouldUsePinAndCodeToDriveTheKey() {
-        val version = MedStickerKey.ADAM
+        val version = MedStickerCipher.ADAM
 
         val drived = service.deriveKey("yeeXCYff", "yzuygF6M", version)
 
