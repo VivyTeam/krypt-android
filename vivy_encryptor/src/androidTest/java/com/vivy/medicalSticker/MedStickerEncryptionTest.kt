@@ -17,24 +17,16 @@ class MedStickerEncryptionTest {
     }
 
     @Test
-    fun scryptBritneyTest() {
+    fun medicalStickerEncryptionBritneyTest() {
         val pin = "yzuygF6M"
         val code = "yeeXCYff"
         val secret = "secret"
-
+        service setDebugTo true
         val scryptData = service.encrypt(code, pin, secret.toByteArray(), MedStickerKey.BRITNEY)
 
-        assertThat(scryptData)
-            .extracting { it.data }
-            .isNotEqualTo(secret.toByteArray())
 
-        assertThat(scryptData)
-            .extracting { it.key.key }
-            .isNotNull()
-
-        assertThat(scryptData)
-            .extracting { it.key.iv }
-            .isNotNull()
+        assertThat(Arrays.equals(scryptData.data,secret.toByteArray()))
+                .isFalse()
 
         val decrypted = service.decrypt(pin, code, scryptData.data, MedStickerKey.BRITNEY)
 
@@ -50,17 +42,8 @@ class MedStickerEncryptionTest {
 
         val scryptData = service.encrypt(code, pin, secret.toByteArray(), MedStickerKey.ADAM)
 
-        assertThat(scryptData)
-            .extracting { it.data }
-            .isNotEqualTo(secret.toByteArray())
-
-        assertThat(scryptData)
-            .extracting { it.key.key }
-            .isNotNull()
-
-        assertThat(scryptData)
-            .extracting { it.key.iv }
-            .isNotNull()
+        assertThat(Arrays.equals(scryptData.data,secret.toByteArray()))
+                .isFalse()
 
         val decrypted = service.decrypt(pin, code, scryptData.data, MedStickerKey.ADAM)
 
