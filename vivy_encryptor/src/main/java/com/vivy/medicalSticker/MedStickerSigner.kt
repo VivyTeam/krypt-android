@@ -6,8 +6,8 @@ import java.io.ByteArrayOutputStream
 
 internal object MedStickerSigner {
 
-    fun accessSignature(medStickerCipher: MedStickerCipher,salt:ByteArray):String{
-        return "sha256" + EncryptionBase64.base64(signBytes(medStickerCipher.key,medStickerCipher.iv,salt))
+    fun accessSignature(medStickerCipherAttr: MedStickerCipherAttr,salt:ByteArray):String{
+        return "sha256" + EncryptionBase64.base64(signBytes(medStickerCipherAttr.key,medStickerCipherAttr.iv,salt))
     }
 
     fun signBytes(key:ByteArray,iv:ByteArray,salt: ByteArray):ByteArray{

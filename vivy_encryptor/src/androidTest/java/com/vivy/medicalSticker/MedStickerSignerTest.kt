@@ -25,7 +25,7 @@ class MedStickerSignerTest {
     @Test
     fun signAndBase64() {
 
-        val signedBased = service.accessSignature(MedStickerCipher("key".toByteArray(), "iv".toByteArray()), "someSaltWithExtraSpice".toByteArray())
+        val signedBased = service.accessSignature(MedStickerCipherAttr("key".toByteArray(), "iv".toByteArray()), "someSaltWithExtraSpice".toByteArray())
 
         assertThat(signedBased)
             .isEqualTo("sha256/+vz8RNqVXkXPHqr4lRZ2tD09p83gLeQJB7cB1N3zS0=")
