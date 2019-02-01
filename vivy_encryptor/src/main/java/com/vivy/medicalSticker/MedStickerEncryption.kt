@@ -39,8 +39,6 @@ object MedStickerEncryption {
                 MedStickerKey.ADAM -> aesCbcPkcs7.encrypt(gzip.gzip(data), medKey.key, medKey.iv)
                 else -> throw UnsupportedOperationException("unsupported version used")
             }
-
-
             return EncryptedMedSticker(encryptedData, medKey)
         } catch (e: Exception) {
             throw EncryptionFailed(if (debug) e else null)
@@ -112,7 +110,8 @@ object MedStickerEncryption {
         )
     }
 
-    internal fun decrypt(
+
+    fun decrypt(
         pin: String,
         code: String,
         encryptedData: ByteArray,
