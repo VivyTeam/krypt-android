@@ -13,7 +13,6 @@ android {
     targetSdkVersion androidConfig.targetSdkVersion
     versionCode 1
     versionName "1.0"
-
     testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
   }
 
@@ -30,6 +29,7 @@ android {
   lintOptions {
     warning 'InvalidPackage'
   }
+
 }
 
 dependencies {
@@ -40,10 +40,12 @@ dependencies {
   api commonDependencies.options
   api commonDependencies.guava
   api commonDependencies.bouncyCastle
+
   testImplementation 'junit:junit:4.12'
   androidTestImplementation commonTestDependencies.testRunner
   androidTestImplementation commonTestDependencies.espresso
   androidTestImplementation commonTestDependencies.assertj
+  testImplementation commonTestDependencies.assertj
   api "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
 }
 repositories {

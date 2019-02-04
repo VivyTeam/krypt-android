@@ -20,7 +20,7 @@ object RsaOperationHelper {
         // if the cipher is initialized with android key, blocksize is 0, so we need to make a guess
         // so far, this 0 is only happening if it's initialized with android key for decryption
         // so we just guess use the output decryption blocksize
-        var cipherBlockSize = 0
+        var cipherBlockSize: Int
         var cipher: Cipher? = null
 
         try {
