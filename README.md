@@ -42,4 +42,4 @@ val plainText = String(decryptedMessage, Charsets.UTF_8)//secret message
 ```
 License
 ----
-[MIT](https://opensource.org/licenses/MIT)
+Code is distributed under the [MIT](https://opensource.org/licenses/MIT) license 
