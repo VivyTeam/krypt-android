@@ -8,7 +8,6 @@ import com.vivy.symmetric.AesGcmNoPadding
 
 object MedStickerEncryption {
     var debug: Boolean = false
-    val gzip = Gzip()
     internal const val CPU_COST = 16384
     internal const val MEMORY_COST_ADAM = 8
     internal const val MEMORY_COST_BRITNEY = 10
@@ -35,8 +34,8 @@ object MedStickerEncryption {
         val medKey = deriveKey(code, pin, version)
         try {
             val encryptedData = when (version) {
-                MedStickerCipherAttr.BRITNEY -> gcmNoPadding.encrypt(gzip.gzip(data), medKey.key, medKey.iv)
-                MedStickerCipherAttr.ADAM -> aesCbcPkcs7.encrypt(gzip.gzip(data), medKey.key, medKey.iv)
+                MedStickerCipherAttr.BRITNEY -> gcmNoPadding.encrypt(data, medKey.key, medKey.iv)
+                MedStickerCipherAttr.ADAM -> aesCbcPkcs7.encrypt(data, medKey.key, medKey.iv)
                 else -> throw UnsupportedOperationException("unsupported version used")
             }
             return EncryptedMedSticker(encryptedData, medKey)
@@ -51,8 +50,8 @@ object MedStickerEncryption {
     ): ByteArray {
         try {
             return when (attr.version) {
-                MedStickerCipherAttr.BRITNEY -> gzip.gunzip(gcmNoPadding.decrypt(encryptedData, attr.key, attr.iv))
-                else -> gzip.gunzip(aesCbcPkcs7.decrypt(encryptedData, attr.key, attr.iv))
+                MedStickerCipherAttr.BRITNEY -> gcmNoPadding.decrypt(encryptedData, attr.key, attr.iv)
+                else -> aesCbcPkcs7.decrypt(encryptedData, attr.key, attr.iv)
             }
 
         } catch (e: Exception) {

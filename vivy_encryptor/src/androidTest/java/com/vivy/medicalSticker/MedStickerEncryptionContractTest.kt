@@ -10,66 +10,79 @@ class MedStickerEncryptionContractTest {
 
     @Test
     fun driveKeyAdamContractTest() {
-        val keyAttr = service.deriveKey("yeeXCYff", "yzuygF6M", MedStickerCipherAttr.ADAM)
+        val keyAttr = service.deriveKey("7i6XA2zz", "qmHuG263", MedStickerCipherAttr.ADAM)
 
         assertThat(encryptionBase64.base64(keyAttr.key))
-            .isEqualTo("8soJNVPExZ7e9Jh09WQGosdzJ+i0HJ6fDt+yMbp2CsM=")
+            .isEqualTo("Pivil9wBlqECOP8qulkJnHFnIiIwSffQt4rXo27X4Uk=")
 
         assertThat(encryptionBase64.base64(keyAttr.iv))
-            .isEqualTo("Mh5ZVDlef1mpllNsksXucg==")
+            .isEqualTo("gi44bZGuBBdLpMISpeppWQ==")
 
     }
 
     @Test
     fun driveKeyBritneyContractTest() {
-        val keyAttr = service.deriveKey("yeeXCYff", "yzuygF6M", MedStickerCipherAttr.BRITNEY)
+        val keyAttr = service.deriveKey("7i6XA2zz", "qmHuG263", MedStickerCipherAttr.BRITNEY)
 
         assertThat(encryptionBase64.base64(keyAttr.key))
-            .isEqualTo("EdSOjdfxPyfeLm19guHEVmREhnJ1ekxzRSQjkLTuQ6w=")
+            .isEqualTo("1v6YGdN6BW2AR1uEylOmjSwKu/kUr5qNYR42X0Che3U=")
 
         assertThat(encryptionBase64.base64(keyAttr.iv))
-            .isEqualTo("4G7mC88WuqFt/zpceuHUFQ==")
+            .isEqualTo("aoiywBzTwYxzKQz45UxWaQ==")
 
     }
 
     @Test
     fun medStickerEncryptionAdam() {
-        val encrypted = service.encrypt("yeeXCYff", "yzuygF6M", "secret".toByteArray(), MedStickerCipherAttr.ADAM)
+        val encrypted = service.encrypt("7i6XA2zz", "qmHuG263", "A Healthier Life is a Happier Life".toByteArray(), MedStickerCipherAttr.ADAM)
 
         assertThat(encryptionBase64.base64(encrypted.data))
-            .isEqualTo("0hP92D9TSOMdr3yXnOLGQdWUVGMuUGZ+jxdOg4wE1R8=")
+            .isEqualTo("rIfjcSAsEh/so+5+ijho97FmIRH36LCCkD/a0V0HWsmw01SEpxoYrQjp5Il5IITw")
 
     }
 
     @Test
+    fun medStickerDecryptionBritny() {
+        val pin = "qmHuG263"
+        val code = "7i6XA2zz"
+
+        val encrypted = service.encrypt(code = code, pin = pin, data = "A Healthier Life is a Happier Life".toByteArray(), version = MedStickerCipherAttr.BRITNEY).data
+
+        assertThat(encryptionBase64.base64(encrypted))
+            .isEqualTo("1EkGWJAKP0BG2CAstCFcq8ysbOEvYwruJrrJUBRVGQMe8590wfdKge/jfKcLwEjFg7Q=")
+    }
+
+
+    @Test
     fun medStickerDecryptionBritney() {
 
-        val key = encryptionBase64.debase64("EdSOjdfxPyfeLm19guHEVmREhnJ1ekxzRSQjkLTuQ6w=")
-        val iv = encryptionBase64.debase64("4G7mC88WuqFt/zpceuHUFQ==")
+        val key = encryptionBase64.debase64("1v6YGdN6BW2AR1uEylOmjSwKu/kUr5qNYR42X0Che3U=")
+        val iv = encryptionBase64.debase64("aoiywBzTwYxzKQz45UxWaQ==")
+
         val encrypted = encryptionBase64.debase64(
-            "RrrWVUp6/A7EeGT0b1xa2UoHiVp6b66fd7U57fvMnI7nIxR/nGCVcipTDVQciOPiMlOTeI78SfVKC+84Sx/Dd0Ea0Tl9amIfKRTYqDuUyLaSLaytJuNPvtSJr3PWJt8oDybbD5t1o5A3YNuD8oRi2mgxoo/o"
+            "1EkGWJAKP0BG2CAstCFcq8ysbOEvYwruJrrJUBRVGQMe8590wfdKge/jfKcLwEjFg7Q="
         )
 
         val decrypted = service.decrypt(MedStickerCipherAttr(key, iv, MedStickerCipherAttr.BRITNEY), encrypted)
 
         assertThat(String(decrypted))
-            .isEqualTo("“Debugging” is like being the detective in a crime drama where you are also the murderer.")
+            .isEqualTo("A Healthier Life is a Happier Life")
 
     }
 
     @Test
     fun medStickerDecryptionAdam() {
-        val key = encryptionBase64.debase64("8soJNVPExZ7e9Jh09WQGosdzJ+i0HJ6fDt+yMbp2CsM=")
-        val iv = encryptionBase64.debase64("Mh5ZVDlef1mpllNsksXucg==")
+        val key = encryptionBase64.debase64("Pivil9wBlqECOP8qulkJnHFnIiIwSffQt4rXo27X4Uk=")
+        val iv = encryptionBase64.debase64("gi44bZGuBBdLpMISpeppWQ==")
+
         val encrypted = encryptionBase64.debase64(
-            "TnjEXNfrBZJmNhCng+sLr22gPjqQMYPqv62Rgl9CAaNqPeHPubuP6cy53eweAkRJk+O7e4yFVvSC3FMa5Ylz86Ozkd2zoFX/ChVfC0BYaclxVDAijDq4LbKzDwp0QVVXiSTwoFLKOpFeFqrehr6q5g=="
+            "rIfjcSAsEh/so+5+ijho97FmIRH36LCCkD/a0V0HWsmw01SEpxoYrQjp5Il5IITw"
         )
 
         val decrypted = service.decrypt(MedStickerCipherAttr(key, iv, MedStickerCipherAttr.ADAM), encrypted)
 
         assertThat(String(decrypted))
-            .isEqualTo("“Debugging” is like being the detective in a crime drama where you are also the murderer.")
-
+            .isEqualTo("A Healthier Life is a Happier Life")
 
     }
 
