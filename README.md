@@ -5,19 +5,21 @@ library being used by Vivy android client to perform crypto operations
 
 ### EHR Encryption:
 ```kotlin
-val publicKey:PublicKey = getMyPublicKey()
+val publicKey: PublicKey = getMyPublicKey()
 
-val toBeEncrypted:ByteArray = "secret message".toByteArray(Charsets.UTF_8)
+val toBeEncrypted: ByteArray = "secret message".toByteArray(Charsets.UTF_8)
 
-val encrypted:E2EEncryption.Encrypted = EHREncryption().encrypt(publicKey, Gzip().gzip(toBeEncrypted))
+val encrypted: E2EEncryption.Encrypted = EHREncryption().encrypt(publicKey, Gzip().gzip(toBeEncrypted))
 ```
 ### EHR Decryption:
 ```kotlin
-val privateKey:PrivateKey = getMyPrivateKey()
-val decrypted:ByteArray = EHREncryption().decrypt(privateKey,encrypted)
-val planText:String = String(decrypted,Charsets.UTF_8)//secret message
+val privateKey: PrivateKey = getMyPrivateKey()
+
+val decrypted: ByteArray = EHREncryption().decrypt(privateKey, Gzip().gunzip(encrypted))
+
+val plainText: String = String(decrypted, Charsets.UTF_8)//secret message
 ```
-##### for medical sticker currently there are two versions, adam and britney
+##### for medical sticker currently there are two versions, adam and britney, encryption always use the latest which is Britney, decryption has to supply version
 
 ### Medical Sticker key derivation:
 ```kotlin
@@ -35,7 +37,7 @@ val encrypted = encryptedMedSticker.data
 
 val decryptedMessage = MedStickerEncryption.decrypt(encryptedKeyAttr, encrypted)
 
-val planeText = String(decryptedMessage, Charsets.UTF_8)//secret message
+val plainText = String(decryptedMessage, Charsets.UTF_8)//secret message
         
 ```
 License
