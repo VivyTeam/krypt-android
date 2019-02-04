@@ -1,0 +1,43 @@
+# android-crypto-lib
+library being used by Vivy android client to perform crypto operations
+
+# How to use?
+
+### EHR Encryption:
+```kotlin
+val publicKey:PublicKey = getMyPublicKey()
+
+val toBeEncrypted:ByteArray = "secret message".toByteArray(Charsets.UTF_8)
+
+val encrypted:E2EEncryption.Encrypted = EHREncryption().encrypt(publicKey, Gzip().gzip(toBeEncrypted))
+```
+### EHR Decryption:
+```kotlin
+val privateKey:PrivateKey = getMyPrivateKey()
+val decrypted:ByteArray = EHREncryption().decrypt(privateKey,encrypted)
+val planText:String = String(decrypted,Charsets.UTF_8)//secret message
+```
+##### for medical sticker currently there are two versions, adam and britney
+
+### Medical Sticker key derivation:
+```kotlin
+ val keyAttr: MedStickerCipherAttr = MedStickerEncryption.deriveKey(code = "qmHuG263", pin = "7i6XA2zz", version = MedStickerCipherAttr.BRITNEY)
+```
+
+### Medical Sticker encryption/Decryption:
+
+```kotlin
+val encryptedMedSticker: EncryptedMedSticker = MedStickerEncryption.encrypt(code = "qmHuG263", pin = "7i6XA2zz", data = "secret message".toByteArray(Charsets.UTF_8))
+
+val encryptedKeyAttr: MedStickerCipherAttr = encryptedMedSticker.attr
+
+val encrypted = encryptedMedSticker.data
+
+val decryptedMessage = MedStickerEncryption.decrypt(encryptedKeyAttr, encrypted)
+
+val planeText = String(decryptedMessage, Charsets.UTF_8)//secret message
+        
+```
+License
+----
+[MIT](https://opensource.org/licenses/MIT)
