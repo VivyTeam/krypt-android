@@ -13,9 +13,9 @@ internal object MedStickerSigner {
     fun signBytes(key:ByteArray,iv:ByteArray,salt: ByteArray):ByteArray{
          ByteArrayOutputStream()
             .use {
-                it.write(salt)
                 it.write(key)
                 it.write(iv)
+                it.write(salt)
                 return Hashing.sha256()
                     .hashBytes(it.toByteArray())
                     .asBytes()
