@@ -1,21 +1,19 @@
 package com.vivy.asymmetric
 
 import com.vivy.asymmetric.RsaOperationHelper.rsaOperation
-import com.vivy.support.EncryptionBase64
+import com.vivy.support.Base64Encoder
 import java.lang.Exception
 import java.nio.charset.StandardCharsets
-import java.security.NoSuchAlgorithmException
 import java.security.PrivateKey
 import java.security.PublicKey
 import java.security.spec.MGF1ParameterSpec
 import javax.crypto.Cipher
-import javax.crypto.NoSuchPaddingException
 import javax.crypto.spec.OAEPParameterSpec
 import javax.crypto.spec.PSource
 
 class RsaEcbOeapSha256 : AsymmetricEncryption {
 
-    internal val base64 = EncryptionBase64
+    internal val base64 = Base64Encoder
 
     private val oaepParameterSpec: OAEPParameterSpec
         get() = OAEPParameterSpec(

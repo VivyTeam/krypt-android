@@ -1,20 +1,16 @@
 package com.vivy.asymmetric
 
 import com.vivy.asymmetric.RsaOperationHelper.rsaOperation
-import com.vivy.support.EncryptionBase64
-import timber.log.Timber
+import com.vivy.support.Base64Encoder
 import java.lang.Exception
 import java.nio.charset.StandardCharsets
-import java.security.NoSuchAlgorithmException
 import java.security.PrivateKey
 import java.security.PublicKey
-import java.util.UUID
 import javax.crypto.Cipher
-import javax.crypto.NoSuchPaddingException
 
 class RsaEcbPkcs1 : AsymmetricEncryption {
 
-    internal val base64 = EncryptionBase64
+    internal val base64 = Base64Encoder
 
     private val rsaCipher: Cipher
         get() {

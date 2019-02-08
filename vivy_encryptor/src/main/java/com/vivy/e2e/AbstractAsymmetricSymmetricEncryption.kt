@@ -3,7 +3,7 @@ package com.vivy.e2e
 import com.google.gson.GsonBuilder
 import com.google.gson.reflect.TypeToken
 import com.vivy.asymmetric.AsymmetricEncryption
-import com.vivy.support.EncryptionBase64
+import com.vivy.support.Base64Encoder
 import com.vivy.support.SecureRandomGenerator
 import com.vivy.symmetric.SymmetricEncryption
 import java.lang.reflect.Type
@@ -15,7 +15,7 @@ abstract class AbstractAsymmetricSymmetricEncryption(
     val symmetricEncryption: SymmetricEncryption
 ) : E2EEncryption {
 
-    private val base64 = EncryptionBase64
+    private val base64Encoder = Base64Encoder
     private val secureRandomGenerator = SecureRandomGenerator()
 
     private val gson = GsonBuilder().disableHtmlEscaping().create()
@@ -28,20 +28,20 @@ abstract class AbstractAsymmetricSymmetricEncryption(
         val key = secureRandomGenerator.bytes(32)
         val iv = secureRandomGenerator.bytes(16)
         try {
-            val aesEncrypted = symmetricEncryption.encrypt(plainData, key, iv)
+            val aesEncryptedBytes = symmetricEncryption.encrypt(plainData, key, iv)
 
-            val cipherJson = gson.toJson(
+            val cipherKeysJson = gson.toJson(
                 mapOf<String, String>(
-                    "base64EncodedKey" to base64.base64(key),
-                    "base64EncodedIV" to base64.base64(iv)
+                    "base64EncodedKey" to base64Encoder.base64(key),
+                    "base64EncodedIV" to base64Encoder.base64(iv)
                 )
             )
 
-            val encryptedCipherText = asymmetricEncryption.encryptText(publicKey, cipherJson)
+            val encryptedCipherKeys = asymmetricEncryption.encryptText(publicKey, cipherKeysJson)
 
             return E2EEncryption.Encrypted(
-                aesEncrypted,
-                encryptedCipherText,
+                aesEncryptedBytes,
+                encryptedCipherKeys,
                 version
             )
         } catch (e: Throwable) {
@@ -54,16 +54,16 @@ abstract class AbstractAsymmetricSymmetricEncryption(
         encrypted: E2EEncryption.Encrypted
     ): ByteArray {
         try {
-            val encryptedCipherText = encrypted.cipher
-            val cipherJson = asymmetricEncryption.decryptText(privateKey, encryptedCipherText)
+            val encryptedCipherKeys = encrypted.cipher
+            val cipherKeysJson = asymmetricEncryption.decryptText(privateKey, encryptedCipherKeys)
             val type: Type = object : TypeToken<Map<String, String>>() {}.type
-            val cipherMap = gson.fromJson<Map<String, String>>(cipherJson, type)
+            val cipherKeysMap = gson.fromJson<Map<String, String>>(cipherKeysJson, type)
 
 
             return symmetricEncryption.decrypt(
                 encrypted.data,
-                base64.debase64(cipherMap["base64EncodedKey"].toString()),
-                base64.debase64(cipherMap["base64EncodedIV"].toString())
+                base64Encoder.debase64(cipherKeysMap["base64EncodedKey"].toString()),
+                base64Encoder.debase64(cipherKeysMap["base64EncodedIV"].toString())
             )
         } catch (e: Throwable) {
             throw DecryptionFailed(if (debugMode) e else null)
