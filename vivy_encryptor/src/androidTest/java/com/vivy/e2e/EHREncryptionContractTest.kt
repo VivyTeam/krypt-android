@@ -1,7 +1,7 @@
 package com.vivy.e2e
 
 import com.vivy.e2e.E2EEncryption.Encrypted
-import com.vivy.support.EncryptionBase64
+import com.vivy.support.Base64Encoder
 import com.vivy.support.KeyConverter
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Test
@@ -67,7 +67,7 @@ class EHREncryptionContractTest {
 
         val decrypted = EHREncryption().decrypt(
             KeyConverter().PKC1ToPKCS8PrivateKey(privateKeyString),
-            Encrypted(EncryptionBase64.debase64(gcmEncryptedMessage), gcmCipherKey, RsaEcbOeapSha256AesGcmNoPadding.VERSION)
+            Encrypted(Base64Encoder.debase64(gcmEncryptedMessage), gcmCipherKey, RsaEcbOeapSha256AesGcmNoPadding.VERSION)
         )
         assertThat(String(decrypted,Charsets.UTF_8))
             .isEqualTo("A Healthier Life is a Happier Life")
@@ -81,7 +81,7 @@ class EHREncryptionContractTest {
 
         val decrypted = EHREncryption().decrypt(
             KeyConverter().PKC1ToPKCS8PrivateKey(privateKeyString),
-            Encrypted(EncryptionBase64.debase64(cbcEncryptedData), cbcCipherKey, RsaEcbPkcs1AesCbcPkcs7.VERSION)
+            Encrypted(Base64Encoder.debase64(cbcEncryptedData), cbcCipherKey, RsaEcbPkcs1AesCbcPkcs7.VERSION)
         )
 
         assertThat(String(decrypted,Charsets.UTF_8))

@@ -4,7 +4,7 @@ import com.google.common.base.Optional
 import com.google.gson.GsonBuilder
 import com.vivy.e2e.E2EEncryption
 import com.vivy.e2e.EHREncryption
-import com.vivy.support.EncryptionBase64
+import com.vivy.support.Base64Encoder
 import com.vivy.support.Gzip
 import com.vivy.support.KeyProvider
 import io.reactivex.Single
@@ -18,7 +18,7 @@ class FileEncryption(private var keyProvider: KeyProvider) {
     private val GSON = GsonBuilder()
             .disableHtmlEscaping()
             .create()
-    private val base64 = EncryptionBase64
+    private val base64 = Base64Encoder
     private val encryptor: E2EEncryption by lazy {
         EHREncryption()
     }

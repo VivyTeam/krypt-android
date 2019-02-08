@@ -7,9 +7,9 @@ import org.hamcrest.MatcherAssert.assertThat
 import org.hamcrest.Matchers.equalTo
 import org.hamcrest.Matchers.not
 
-class EncryptionBase64Test {
+class Base64EncoderTest {
 
-    internal var base64 = EncryptionBase64
+    internal var base64 = Base64Encoder
 
     @Test
     fun base64() {

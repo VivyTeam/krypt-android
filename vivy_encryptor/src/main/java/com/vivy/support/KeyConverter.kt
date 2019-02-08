@@ -21,11 +21,11 @@ import java.security.spec.X509EncodedKeySpec
 class KeyConverter {
 
     fun toPem(rsaPrivateKey: RSAPrivateKey): String {
-        val publicKey = PemObject("PRIVATE KEY", rsaPrivateKey.encoded)
+        val privateKey = PemObject("PRIVATE KEY", rsaPrivateKey.encoded)
 
         val outputStream = ByteArrayOutputStream()
         try {
-            PemWriter(OutputStreamWriter(outputStream)).use { pemWriter -> pemWriter.writeObject(publicKey) }
+            PemWriter(OutputStreamWriter(outputStream)).use { pemWriter -> pemWriter.writeObject(privateKey) }
         } catch (e: IOException) {
             throw IllegalStateException(e)
         }

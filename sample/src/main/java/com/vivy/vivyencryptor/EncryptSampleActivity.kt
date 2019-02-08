@@ -11,7 +11,7 @@ import androidx.test.espresso.idling.CountingIdlingResource
 import com.vivy.e2e.E2EEncryption
 import com.vivy.e2e.E2EEncryption.Encrypted
 import com.vivy.e2e.EHREncryption
-import com.vivy.support.EncryptionBase64
+import com.vivy.support.Base64Encoder
 import com.vivy.support.Gzip
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -117,7 +117,7 @@ class EncryptSampleActivity : AppCompatActivity() {
             .doOnSubscribe { compositeDisposable.add(it) }
             .subscribe {
                 val output = StringBuilder()
-                output.appendln("Encrypted payload base64: ${EncryptionBase64.base64(it.data)}\n")
+                output.appendln("Encrypted payload base64: ${Base64Encoder.base64(it.data)}\n")
                 output.appendln("payload cipher keys encrypted using RSA : ${it.cipher} \n")
 
                 encryptedText.text = output

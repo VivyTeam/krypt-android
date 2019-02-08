@@ -1,13 +1,13 @@
 package com.vivy.medicalSticker
 
 import com.google.common.hash.Hashing
-import com.vivy.support.EncryptionBase64
+import com.vivy.support.Base64Encoder
 import java.io.ByteArrayOutputStream
 
 internal object MedStickerSigner {
 
     fun accessSignature(medStickerCipherAttr: MedStickerCipherAttr,salt:ByteArray):String{
-        return "sha256" + EncryptionBase64.base64(signBytes(medStickerCipherAttr.key,medStickerCipherAttr.iv,salt))
+        return "sha256" + Base64Encoder.base64(signBytes(medStickerCipherAttr.key,medStickerCipherAttr.iv,salt))
     }
 
     fun signBytes(key:ByteArray,iv:ByteArray,salt: ByteArray):ByteArray{

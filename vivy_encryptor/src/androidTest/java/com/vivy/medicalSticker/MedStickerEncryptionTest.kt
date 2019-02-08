@@ -1,12 +1,11 @@
 package com.vivy.medicalSticker
 
 import com.vivy.e2e.DecryptionFailed
-import com.vivy.support.EncryptionBase64
+import com.vivy.support.Base64Encoder
 import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.Assertions.assertThatThrownBy
 import org.junit.Before
 import org.junit.Test
-import timber.log.Timber
 import java.util.Arrays
 
 class MedStickerEncryptionTest {
@@ -26,7 +25,7 @@ class MedStickerEncryptionTest {
         service setDebugTo true
         val scryptData = service.encrypt(code, pin, secret.toByteArray(), MedStickerCipherAttr.BRITNEY)
 
-        println("medicalStickerEncryptionBritneyTest `secret` encrypted base64 ->${EncryptionBase64.base64(scryptData.data)}")
+        println("medicalStickerEncryptionBritneyTest `secret` encrypted base64 ->${Base64Encoder.base64(scryptData.data)}")
 
         assertThat(Arrays.equals(scryptData.data,secret.toByteArray()))
                 .isFalse()
@@ -44,7 +43,7 @@ class MedStickerEncryptionTest {
         val secret = "secret"
 
         val scryptData = service.encrypt(code, pin, secret.toByteArray(), MedStickerCipherAttr.ADAM)
-        println("medicalStickerEncryptionAdamTest `secret` encrypted base64 ->${EncryptionBase64.base64(scryptData.data)}")
+        println("medicalStickerEncryptionAdamTest `secret` encrypted base64 ->${Base64Encoder.base64(scryptData.data)}")
         assertThat(Arrays.equals(scryptData.data,secret.toByteArray()))
                 .isFalse()
 
@@ -171,7 +170,7 @@ class MedStickerEncryptionTest {
         val key = service.generateKey("yeeXCYff", "yzuygF6M", version)
 
         val iv = service.generateIV(key, "yzuygF6M", version)
-        println("driveKeyBritney code: \"yeeXCYff\", pin:\"yzuygF6M\" encrypted base64 -> key${EncryptionBase64.base64(key)}, iv -> ${EncryptionBase64.base64(iv)}")
+        println("driveKeyBritney code: \"yeeXCYff\", pin:\"yzuygF6M\" encrypted base64 -> key${Base64Encoder.base64(key)}, iv -> ${Base64Encoder.base64(iv)}")
 
         assertThat(Arrays.equals(key, drived.key))
             .isTrue()
@@ -193,7 +192,7 @@ class MedStickerEncryptionTest {
 
         val iv = service.generateIV(key, "yzuygF6M", version)
 
-        println("driveKeyAdam code: \"yeeXCYff\", ping:\"yzuygF6M\" encrypted base64 -> key${EncryptionBase64.base64(key)}, iv -> ${EncryptionBase64.base64(iv)}")
+        println("driveKeyAdam code: \"yeeXCYff\", ping:\"yzuygF6M\" encrypted base64 -> key${Base64Encoder.base64(key)}, iv -> ${Base64Encoder.base64(iv)}")
 
         assertThat(Arrays.equals(key, drived.key))
             .isTrue()

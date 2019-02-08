@@ -1,12 +1,12 @@
 package com.vivy.medicalSticker
 
-import com.vivy.support.EncryptionBase64
+import com.vivy.support.Base64Encoder
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Test
 
 class MedStickerEncryptionContractTest {
     val service = MedStickerEncryption
-    val encryptionBase64 = EncryptionBase64
+    val encryptionBase64 = Base64Encoder
 
     @Test
     fun driveKeyAdamContractTest() {

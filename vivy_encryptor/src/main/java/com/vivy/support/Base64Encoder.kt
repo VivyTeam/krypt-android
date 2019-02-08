@@ -3,7 +3,7 @@ package com.vivy.support
 import android.util.Base64
 import java.nio.charset.StandardCharsets
 
-object EncryptionBase64 {
+object Base64Encoder {
 
     fun base64(targetBytes: ByteArray): String {
         return Base64.encodeToString(targetBytes, Base64.NO_WRAP)
