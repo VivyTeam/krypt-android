@@ -19,7 +19,7 @@ class MedStickerSignerTest {
     fun signBytes() {
         val signedBytes = service.signBytes("key".toByteArray(), "iv".toByteArray(), "salt".toByteArray())
         assertThat(byteToHexString(signedBytes).toUpperCase())
-            .isEqualTo("3D8E7A243CEF60BF157EDB243C9930B2ACF39E7ED84C2A90506988F6919FF9DD")
+            .isEqualTo("17757D722A51BD2DAC96A682C40FBF95BC883BEAC323550F96FC7F5D91893741")
     }
 
     @Test
@@ -28,7 +28,7 @@ class MedStickerSignerTest {
         val signedBased = service.accessSignature(MedStickerCipherAttr("key".toByteArray(), "iv".toByteArray()), "someSaltWithExtraSpice".toByteArray())
 
         assertThat(signedBased)
-            .isEqualTo("sha256/+vz8RNqVXkXPHqr4lRZ2tD09p83gLeQJB7cB1N3zS0=")
+            .isEqualTo("sha2566CxmnzC0V7ZOUyiW03pA2y0vOfdU5bLm2L/2/55byCI=")
     }
 
     private fun byteToHexString(byteArray: ByteArray): String {
