@@ -16,7 +16,7 @@ class MedStickerSignerContractTest {
 
         Assertions.assertThat(
             service.accessSignature(att,salt.toByteArray())
-        ) .isEqualTo("sha256hpK5lcLpZoZ2AHIXUi4IgyRnwGCDqApocWM0DDc++zk=")
+        ) .isEqualTo("adam-sha256:hpK5lcLpZoZ2AHIXUi4IgyRnwGCDqApocWM0DDc++zk=")
     }
 
     @Test
@@ -29,7 +29,7 @@ class MedStickerSignerContractTest {
         Assertions.assertThat(
             service.accessSignature(att,salt.toByteArray())
         )
-            .isEqualTo("sha256RonmY2BVOex5wlGRrLPkXn/MZV1Rhot4wRc9+cuK0zY=")
+            .isEqualTo("britney-sha256:RonmY2BVOex5wlGRrLPkXn/MZV1Rhot4wRc9+cuK0zY=")
     }
 
 }
