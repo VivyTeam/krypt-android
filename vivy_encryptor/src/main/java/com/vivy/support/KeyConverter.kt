@@ -6,11 +6,7 @@ import org.bouncycastle.openssl.jcajce.JcaPEMKeyConverter
 import org.bouncycastle.util.io.pem.PemObject
 import org.bouncycastle.util.io.pem.PemReader
 import org.bouncycastle.util.io.pem.PemWriter
-import java.io.ByteArrayOutputStream
-import java.io.IOException
-import java.io.OutputStreamWriter
-import java.io.StringReader
-import java.io.StringWriter
+import java.io.*
 import java.security.KeyFactory
 import java.security.PrivateKey
 import java.security.interfaces.RSAPrivateKey
@@ -109,6 +105,6 @@ class KeyConverter {
     }
 
     fun isFromPKCS1(keyPem: String): Boolean {
-        return keyPem.contains("RSA")
+        return keyPem.contains("BEGIN RSA PRIVATE KEY")
     }
 }
