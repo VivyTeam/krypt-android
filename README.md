@@ -1,4 +1,4 @@
-# android-crypto-lib
+# krypt-android
 library being used by Vivy android client to perform crypto operations
 
 # How to use?
