@@ -102,12 +102,11 @@ class EmergencyStickerEncryptionTest{
         val secondSalt = "someRandomSecondSalt"
         val secret = "secret"
 
-
         service setDebugTo false
 
         val encryptedData = service.encrypt(pin, backendSecret, secondSalt, secret.toByteArray())
 
-        assertThatThrownBy { service.decrypt(encryptedData.data, encryptedData.attr) }
+        assertThatThrownBy { service.decrypt("wrongPin", backendSecret, secondSalt, encryptedData.attr.iv, encryptedData.data) }
             .isInstanceOf(DecryptionFailed::class.java)
             .hasNoCause()
     }
