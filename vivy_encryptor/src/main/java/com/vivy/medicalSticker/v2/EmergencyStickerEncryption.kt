@@ -2,14 +2,13 @@ package com.vivy.medicalSticker.v2
 
 import com.vivy.e2e.DecryptionFailed
 import com.vivy.e2e.EncryptionFailed
+import com.vivy.medicalSticker.MedStickerCipherAttr
+import com.vivy.medicalSticker.MedStickerCipherAttr.Companion.CHARLIE
 import com.vivy.medicalSticker.MedStickerEncryption
 import com.vivy.medicalSticker.MedStickerKeyGenerator
-import com.vivy.medicalSticker.v2.model.EmergencyStickerCipherAttr
 import com.vivy.medicalSticker.v2.model.EncryptedEmergencySticker
 import com.vivy.support.SecureRandomGenerator
-import com.vivy.symmetric.AesCbcPkcs7
 import com.vivy.symmetric.AesGcmNoPadding
-import java.security.SecureRandom
 
 object EmergencyStickerEncryption {
     var debug: Boolean = false
@@ -53,7 +52,7 @@ object EmergencyStickerEncryption {
 
         try {
             val encryptedData = gcmNoPadding.encrypt(data, keyPairs.key, iv)
-            return EncryptedEmergencySticker(encryptedData, keyPairs.fingerprintFile, EmergencyStickerCipherAttr(keyPairs.key, iv))
+            return EncryptedEmergencySticker(encryptedData, keyPairs.fingerprintFile, MedStickerCipherAttr(keyPairs.key, iv, CHARLIE))
         }catch (e: Exception) {
             throw EncryptionFailed(if (MedStickerEncryption.debug) e else null)
         }
@@ -84,7 +83,7 @@ object EmergencyStickerEncryption {
 
     internal fun decrypt(
         encryptedData: ByteArray,
-        attr: EmergencyStickerCipherAttr
+        attr: MedStickerCipherAttr
     ): ByteArray {
         try {
             return gcmNoPadding.decrypt(encryptedData, attr.key, attr.iv)
@@ -97,12 +96,14 @@ object EmergencyStickerEncryption {
         backEndSecret: String,
         secondSalt:String,
         iv:ByteArray,
-        data: ByteArray): ByteArray {
+        data: ByteArray,
+        version: String
+    ): ByteArray {
 
         val pinFingerprint = getPinFingerprint(pin, backEndSecret, secondSalt)
         val keyPairs = getKeyAndFingerprintFilePair(pinFingerprint)
 
-        return decrypt(data, EmergencyStickerCipherAttr(keyPairs.key, iv))
+        return decrypt(data, MedStickerCipherAttr(keyPairs.key, iv, version))
     }
 
     data class EmergencyStickerKeyPairs(

@@ -1,6 +1,7 @@
 package com.vivy.medicalSticker.v2
 
 import com.vivy.e2e.DecryptionFailed
+import com.vivy.medicalSticker.MedStickerCipherAttr.Companion.CHARLIE
 import com.vivy.medicalSticker.MedStickerKeyGenerator
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
@@ -89,7 +90,7 @@ class EmergencyStickerEncryptionTest{
         assertThat(Arrays.equals(encryptedData.data, secret.toByteArray()))
             .isFalse()
 
-        val decrypted = service.decrypt(pin, backendSecret, secondSalt, encryptedData.attr.iv, encryptedData.data)
+        val decrypted = service.decrypt(pin, backendSecret, secondSalt, encryptedData.attr.iv, encryptedData.data, CHARLIE)
 
         assertThat(String(decrypted))
             .isEqualTo(secret)
@@ -106,7 +107,7 @@ class EmergencyStickerEncryptionTest{
 
         val encryptedData = service.encrypt(pin, backendSecret, secondSalt, secret.toByteArray())
 
-        assertThatThrownBy { service.decrypt("wrongPin", backendSecret, secondSalt, encryptedData.attr.iv, encryptedData.data) }
+        assertThatThrownBy { service.decrypt("wrongPin", backendSecret, secondSalt, encryptedData.attr.iv, encryptedData.data, CHARLIE) }
             .isInstanceOf(DecryptionFailed::class.java)
             .hasNoCause()
     }
