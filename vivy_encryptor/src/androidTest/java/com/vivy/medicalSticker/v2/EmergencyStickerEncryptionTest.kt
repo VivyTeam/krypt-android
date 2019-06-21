@@ -3,6 +3,7 @@ package com.vivy.medicalSticker.v2
 import com.vivy.e2e.DecryptionFailed
 import com.vivy.medicalSticker.MedStickerCipherAttr.Companion.CHARLIE
 import com.vivy.medicalSticker.MedStickerKeyGenerator
+import com.vivy.medicalSticker.v2.EmergencyStickerEncryption.HASH_LENGTH
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
@@ -31,14 +32,12 @@ class EmergencyStickerEncryptionTest{
             EmergencyStickerEncryption.CPU_COST,
             EmergencyStickerEncryption.MEMORY_COST,
             EmergencyStickerEncryption.PARALLELIZATION_PARAM,
-            EmergencyStickerEncryption.FINGER_PRINT_SECRET_LENGTH
-        )
+            HASH_LENGTH
+        ).copyOfRange(0, HASH_LENGTH / 2)
 
         assertThat(Arrays.equals(fingerprintSecret, generatedFingerprintSecret))
             .withFailMessage("generated key should be exactly as scrypt key")
             .isTrue()
-
-        assertThat(fingerprintSecret.size).isEqualTo(EmergencyStickerEncryption.FINGER_PRINT_SECRET_LENGTH)
     }
 
     @Test
@@ -56,26 +55,16 @@ class EmergencyStickerEncryptionTest{
             EmergencyStickerEncryption.CPU_COST,
             EmergencyStickerEncryption.MEMORY_COST,
             EmergencyStickerEncryption.PARALLELIZATION_PARAM,
-            EmergencyStickerEncryption.PIN_FINGER_PRINT_LENGTH
+            HASH_LENGTH
         )
 
-        assertThat(Arrays.equals(pinFingerprint, generatedPinFingerprint))
+        assertThat(Arrays.equals(pinFingerprint.key, generatedPinFingerprint.copyOfRange(0, HASH_LENGTH / 2)))
             .withFailMessage("generated key should be exactly as scrypt key")
             .isTrue()
 
-        assertThat(pinFingerprint.size).isEqualTo(EmergencyStickerEncryption.PIN_FINGER_PRINT_LENGTH)
-    }
-
-    @Test
-    fun validateGetKeyAndFingerprintFilePairIsDividedEqually(){
-        val byteArray1 = getRandomByteArray(256)
-        val byteArray2 = getRandomByteArray(256)
-        val addedByteArray = byteArray1 + byteArray2
-
-        val dividedArray = service.getKeyAndFingerprintFilePair(addedByteArray)
-
-        assertThat(dividedArray.key).isEqualTo(byteArray1)
-        assertThat(dividedArray.fingerprintFile).isEqualTo(byteArray2)
+        assertThat(Arrays.equals(pinFingerprint.fingerprintFile, generatedPinFingerprint.copyOfRange(HASH_LENGTH / 2, HASH_LENGTH)))
+            .withFailMessage("generated key should be exactly as scrypt key")
+            .isTrue()
     }
 
     @Test

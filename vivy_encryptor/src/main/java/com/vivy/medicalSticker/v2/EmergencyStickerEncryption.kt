@@ -15,29 +15,21 @@ object EmergencyStickerEncryption {
     internal const val CPU_COST = 16384
     internal const val MEMORY_COST = 10
     internal const val PARALLELIZATION_PARAM = 1
-    internal const val FINGER_PRINT_SECRET_LENGTH = 32 //Intended length of the pin key.
-    internal const val PIN_FINGER_PRINT_LENGTH = 64 //Intended length of the pin finger print.
+    internal const val HASH_LENGTH = 64
     private const val AES_IV_LENGTH = 16 //Intended length of aes key.
 
     private val gcmNoPadding = AesGcmNoPadding()
 
-    /**
-     * pin: From QR Code
-     * firstSalt: Some fixed constant
-     */
-
-    fun getFingerprintSecret(
-        pin: String,
-        firstSalt: String
-    ):ByteArray {
-        return MedStickerKeyGenerator.getGenSCryptKey(
-            pin.toByteArray(),
-            firstSalt.toByteArray(),
-            CPU_COST,
-            MEMORY_COST,
-            PARALLELIZATION_PARAM,
-            FINGER_PRINT_SECRET_LENGTH
-        )
+    fun encrypt(
+        data: ByteArray,
+        key: ByteArray,
+        iv: ByteArray
+    ):ByteArray{
+        try {
+            return gcmNoPadding.encrypt(data, key, iv)
+        }catch (e: Exception) {
+            throw EncryptionFailed(if (MedStickerEncryption.debug) e else null)
+        }
     }
 
     fun encrypt(
@@ -47,14 +39,12 @@ object EmergencyStickerEncryption {
         data: ByteArray,
         iv: ByteArray
     ): EncryptedEmergencySticker {
-        val pinFingerprint = getPinFingerprint(pin, backEndSecret, secondSalt)
-        val keyPairs = getKeyAndFingerprintFilePair(pinFingerprint)
-        try {
-            val encryptedData = gcmNoPadding.encrypt(data, keyPairs.key, iv)
-            return EncryptedEmergencySticker(encryptedData, keyPairs.fingerprintFile, MedStickerCipherAttr(pin.toByteArray(), iv, CHARLIE))
-        }catch (e: Exception) {
-            throw EncryptionFailed(if (MedStickerEncryption.debug) e else null)
-        }
+
+        val keyPairs = getPinFingerprint(pin, backEndSecret, secondSalt)
+        val encryptedData = encrypt(data, keyPairs.key, iv)
+        val attr = MedStickerCipherAttr(pin.toByteArray(), iv, CHARLIE)
+
+        return EncryptedEmergencySticker(encryptedData, keyPairs.fingerprintFile, attr)
     }
 
     fun getRandomAesIv(): ByteArray {
@@ -66,22 +56,33 @@ object EmergencyStickerEncryption {
      * pinSalt: Generated from Backend
      * pinSecret: Generated from Backend
      */
-    internal fun getPinFingerprint(pin: String, backEndSecret: String, secondSalt:String): ByteArray {
+
+    internal fun getPinFingerprint(
+        secret: String,
+        backEndSecret: String,
+        secondSalt:String
+    ): EmergencyStickerKeyPairs{
+        val hash = getHash(secret + backEndSecret, secondSalt)
+        return EmergencyStickerKeyPairs(hash.copyOfRange(0, HASH_LENGTH / 2), hash.copyOfRange(HASH_LENGTH / 2, HASH_LENGTH))
+    }
+
+
+    fun getFingerprintSecret(secret: String, salt: String): ByteArray{
+        return getHash(secret, salt).copyOfRange(0, HASH_LENGTH / 2)
+    }
+
+    private fun getHash(
+        secret: String,
+        salt: String
+    ):ByteArray {
         return MedStickerKeyGenerator.getGenSCryptKey(
-            (pin + backEndSecret).toByteArray(),
-            secondSalt.toByteArray(),
+            secret.toByteArray(),
+            salt.toByteArray(),
             CPU_COST,
             MEMORY_COST,
             PARALLELIZATION_PARAM,
-            PIN_FINGER_PRINT_LENGTH
+            HASH_LENGTH
         )
-    }
-
-    internal fun getKeyAndFingerprintFilePair(pinFingerprint: ByteArray): EmergencyStickerKeyPairs {
-        val dividedFingerprint = pinFingerprint.toList().chunked(pinFingerprint.size / 2)
-        val key = dividedFingerprint[0].toByteArray()
-        val fingerprintFile = dividedFingerprint[1].toByteArray()
-        return EmergencyStickerKeyPairs(key, fingerprintFile)
     }
 
     internal fun decrypt(
@@ -95,7 +96,8 @@ object EmergencyStickerEncryption {
         }
     }
 
-    fun decrypt(pin: String,
+    fun decrypt(
+        pin: String,
         backEndSecret: String,
         secondSalt:String,
         iv:ByteArray,
@@ -103,8 +105,7 @@ object EmergencyStickerEncryption {
         version: String
     ): ByteArray {
 
-        val pinFingerprint = getPinFingerprint(pin, backEndSecret, secondSalt)
-        val keyPairs = getKeyAndFingerprintFilePair(pinFingerprint)
+        val keyPairs = getPinFingerprint(pin, backEndSecret, secondSalt)
 
         return decrypt(data, MedStickerCipherAttr(keyPairs.key, iv, version))
     }
