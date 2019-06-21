@@ -89,8 +89,7 @@ object EmergencyStickerEncryption {
     internal fun decrypt(
         encryptedData: ByteArray,
         key: ByteArray,
-        iv: ByteArray,
-        version: String
+        iv: ByteArray
     ): ByteArray {
         try {
             return gcmNoPadding.decrypt(encryptedData, key, iv)
@@ -110,7 +109,7 @@ object EmergencyStickerEncryption {
 
         val keyPairs = getPinFingerprint(pin, backEndSecret, secondSalt)
 
-        return decrypt(data, keyPairs.key, iv, version)
+        return decrypt(data, keyPairs.key, iv)
     }
 
     data class EmergencyStickerKeyPairs(
