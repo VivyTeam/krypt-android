@@ -91,7 +91,7 @@ object EmergencyStickerEncryption {
         try {
             return gcmNoPadding.decrypt(encryptedData, attr.key, attr.iv)
         } catch (e: Exception) {
-            throw DecryptionFailed(if (MedStickerEncryption.debug) e else null)
+            throw DecryptionFailed(if (debug) e else null)
         }
     }
 
