@@ -18,7 +18,7 @@ object EmergencyStickerEncryption {
     internal const val MEMORY_COST = 10
     internal const val PARALLELIZATION_PARAM = 1
     internal const val HASH_LENGTH = 64
-    private const val AES_IV_LENGTH = 16 //Intended length of aes key.
+    const val AES_IV_LENGTH = 16 //Intended length of aes key.
 
     private val gcmNoPadding = AesGcmNoPadding()
 
@@ -47,10 +47,6 @@ object EmergencyStickerEncryption {
         val attr = MedStickerCipherAttr(pin.toByteArray(), iv, CHARLIE)
 
         return EncryptedEmergencySticker(encryptedData, keyPairs.fingerprintFile, attr)
-    }
-
-    fun getRandomAesIv(): ByteArray {
-        return SecureRandomGenerator().bytes(AES_IV_LENGTH)
     }
 
     /**
