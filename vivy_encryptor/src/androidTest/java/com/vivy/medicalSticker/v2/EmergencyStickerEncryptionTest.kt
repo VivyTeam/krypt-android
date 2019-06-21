@@ -67,7 +67,7 @@ class EmergencyStickerEncryptionTest{
     }
 
     @Test
-    fun validateByteArrayIsDividedEqually(){
+    fun validateGetKeyAndFingerprintFilePairIsDividedEqually(){
         val byteArray1 = getRandomByteArray(256)
         val byteArray2 = getRandomByteArray(256)
         val addedByteArray = byteArray1 + byteArray2
@@ -85,7 +85,7 @@ class EmergencyStickerEncryptionTest{
         val secondSalt = "someRandomSecondSalt"
         val secret = "secret"
 
-        val encryptedData = service.encrypt(pin, backendSecret, secondSalt, secret.toByteArray())
+        val encryptedData = service.encrypt(pin, backendSecret, secondSalt, secret.toByteArray(), service.getRandomAesIv())
 
         assertThat(Arrays.equals(encryptedData.data, secret.toByteArray()))
             .isFalse()
@@ -105,7 +105,7 @@ class EmergencyStickerEncryptionTest{
 
         service setDebugTo false
 
-        val encryptedData = service.encrypt(pin, backendSecret, secondSalt, secret.toByteArray())
+        val encryptedData = service.encrypt(pin, backendSecret, secondSalt, secret.toByteArray(), service.getRandomAesIv())
 
         assertThatThrownBy { service.decrypt("wrongPin", backendSecret, secondSalt, encryptedData.attr.iv, encryptedData.data, CHARLIE) }
             .isInstanceOf(DecryptionFailed::class.java)

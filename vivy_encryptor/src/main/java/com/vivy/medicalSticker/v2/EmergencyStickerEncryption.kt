@@ -44,18 +44,21 @@ object EmergencyStickerEncryption {
         pin: String,
         backEndSecret: String,
         secondSalt:String,
-        data: ByteArray
+        data: ByteArray,
+        iv: ByteArray
     ): EncryptedEmergencySticker {
         val pinFingerprint = getPinFingerprint(pin, backEndSecret, secondSalt)
         val keyPairs = getKeyAndFingerprintFilePair(pinFingerprint)
-        val iv = SecureRandomGenerator().bytes(AES_IV_LENGTH)
-
         try {
             val encryptedData = gcmNoPadding.encrypt(data, keyPairs.key, iv)
             return EncryptedEmergencySticker(encryptedData, keyPairs.fingerprintFile, MedStickerCipherAttr(pin.toByteArray(), iv, CHARLIE))
         }catch (e: Exception) {
             throw EncryptionFailed(if (MedStickerEncryption.debug) e else null)
         }
+    }
+
+    fun getRandomAesIv(): ByteArray {
+        return SecureRandomGenerator().bytes(AES_IV_LENGTH)
     }
 
     /**
