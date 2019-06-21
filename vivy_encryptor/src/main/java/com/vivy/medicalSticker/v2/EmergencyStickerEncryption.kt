@@ -17,7 +17,7 @@ object EmergencyStickerEncryption {
     internal const val PARALLELIZATION_PARAM = 1
     internal const val FINGER_PRINT_SECRET_LENGTH = 32 //Intended length of the pin key.
     internal const val PIN_FINGER_PRINT_LENGTH = 64 //Intended length of the pin finger print.
-    internal const val AES_IV_LENGTH = 16 //Intended length of aes key.
+    private const val AES_IV_LENGTH = 16 //Intended length of aes key.
 
     private val gcmNoPadding = AesGcmNoPadding()
 
