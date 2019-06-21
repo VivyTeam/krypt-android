@@ -52,7 +52,7 @@ object EmergencyStickerEncryption {
 
         try {
             val encryptedData = gcmNoPadding.encrypt(data, keyPairs.key, iv)
-            return EncryptedEmergencySticker(encryptedData, keyPairs.fingerprintFile, MedStickerCipherAttr(keyPairs.key, iv, CHARLIE))
+            return EncryptedEmergencySticker(encryptedData, keyPairs.fingerprintFile, MedStickerCipherAttr(pin.toByteArray(), iv, CHARLIE))
         }catch (e: Exception) {
             throw EncryptionFailed(if (MedStickerEncryption.debug) e else null)
         }
