@@ -3,12 +3,15 @@ package com.vivy.medicalSticker.v2
 import com.vivy.e2e.DecryptionFailed
 import com.vivy.medicalSticker.MedStickerCipherAttr.Companion.CHARLIE
 import com.vivy.medicalSticker.MedStickerKeyGenerator
+import com.vivy.medicalSticker.common.toHexString
+import com.vivy.medicalSticker.v2.EmergencyStickerEncryption.FIRST_SALT
 import com.vivy.medicalSticker.v2.EmergencyStickerEncryption.HASH_LENGTH
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
 import java.util.Arrays
 import org.assertj.core.api.Assertions.assertThatThrownBy
+import timber.log.Timber
 import java.security.SecureRandom
 
 class EmergencyStickerEncryptionTest{
@@ -22,22 +25,20 @@ class EmergencyStickerEncryptionTest{
     @Test
     fun generateFingerprintSecretShouldDriveKeyFromScrypt(){
         val pin = "someRandomPin"
-        val firstSalt = "someRandomSalt"
 
-        val fingerprintSecret = service.getFingerprintSecret(pin, firstSalt)
+        val fingerprintSecret = service.getFingerprintSecret(pin)
 
         val generatedFingerprintSecret = MedStickerKeyGenerator.getGenSCryptKey(
             pin.toByteArray(),
-            firstSalt.toByteArray(),
+            FIRST_SALT.toByteArray(),
             EmergencyStickerEncryption.CPU_COST,
             EmergencyStickerEncryption.MEMORY_COST,
             EmergencyStickerEncryption.PARALLELIZATION_PARAM,
             HASH_LENGTH
-        ).copyOfRange(0, HASH_LENGTH / 2)
+        ).copyOfRange(0, HASH_LENGTH / 2).toHexString()
 
-        assertThat(Arrays.equals(fingerprintSecret, generatedFingerprintSecret))
+        assertThat(fingerprintSecret).isEqualTo(generatedFingerprintSecret)
             .withFailMessage("generated key should be exactly as scrypt key")
-            .isTrue()
     }
 
     @Test
@@ -99,11 +100,5 @@ class EmergencyStickerEncryptionTest{
         assertThatThrownBy { service.decrypt("wrongPin", backendSecret, secondSalt, encryptedData.attr.iv, encryptedData.data, CHARLIE) }
             .isInstanceOf(DecryptionFailed::class.java)
             .hasNoCause()
-    }
-
-    private fun getRandomByteArray(length:Int): ByteArray {
-        val bytes = ByteArray(length)
-        SecureRandom().nextBytes(bytes)
-        return bytes
     }
 }

@@ -6,12 +6,14 @@ import com.vivy.medicalSticker.MedStickerCipherAttr
 import com.vivy.medicalSticker.MedStickerCipherAttr.Companion.CHARLIE
 import com.vivy.medicalSticker.MedStickerEncryption
 import com.vivy.medicalSticker.MedStickerKeyGenerator
+import com.vivy.medicalSticker.common.toHexString
 import com.vivy.medicalSticker.v2.model.EncryptedEmergencySticker
 import com.vivy.support.SecureRandomGenerator
 import com.vivy.symmetric.AesGcmNoPadding
 
 object EmergencyStickerEncryption {
     var debug: Boolean = false
+    internal const val FIRST_SALT = "5f1288159017d636c13c1c1b2835b8a871780bc2"
     internal const val CPU_COST = 16384
     internal const val MEMORY_COST = 10
     internal const val PARALLELIZATION_PARAM = 1
@@ -66,9 +68,8 @@ object EmergencyStickerEncryption {
         return EmergencyStickerKeyPairs(hash.copyOfRange(0, HASH_LENGTH / 2), hash.copyOfRange(HASH_LENGTH / 2, HASH_LENGTH))
     }
 
-
-    fun getFingerprintSecret(secret: String, salt: String): ByteArray{
-        return getHash(secret, salt).copyOfRange(0, HASH_LENGTH / 2)
+    fun getFingerprintSecret(secret: String): String{
+        return getHash(secret, FIRST_SALT).copyOfRange(0, HASH_LENGTH / 2).toHexString()
     }
 
     private fun getHash(
@@ -87,10 +88,12 @@ object EmergencyStickerEncryption {
 
     internal fun decrypt(
         encryptedData: ByteArray,
-        attr: MedStickerCipherAttr
+        key: ByteArray,
+        iv: ByteArray,
+        version: String
     ): ByteArray {
         try {
-            return gcmNoPadding.decrypt(encryptedData, attr.key, attr.iv)
+            return gcmNoPadding.decrypt(encryptedData, key, iv)
         } catch (e: Exception) {
             throw DecryptionFailed(if (debug) e else null)
         }
@@ -107,7 +110,7 @@ object EmergencyStickerEncryption {
 
         val keyPairs = getPinFingerprint(pin, backEndSecret, secondSalt)
 
-        return decrypt(data, MedStickerCipherAttr(keyPairs.key, iv, version))
+        return decrypt(data, keyPairs.key, iv, version)
     }
 
     data class EmergencyStickerKeyPairs(
