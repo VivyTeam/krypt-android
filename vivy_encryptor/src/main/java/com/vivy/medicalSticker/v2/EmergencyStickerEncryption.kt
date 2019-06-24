@@ -66,16 +66,16 @@ object EmergencyStickerEncryption {
         return EmergencyStickerKeyPairs(key, fingerprintFile)
     }
 
-    fun getFingerprintSecret(secret: String): String{
-        return CHARLIE + ":" + getHash(secret, CHARLIE_CONSTANT_SALT).toHexString()
+    fun getFingerprintSecret(pin: String): String{
+        return CHARLIE + ":" + getHash(pin, CHARLIE_CONSTANT_SALT).toHexString()
     }
 
     private fun getHash(
-        secret: String,
+        pin: String,
         salt: String
     ):ByteArray {
         return MedStickerKeyGenerator.getGenSCryptKey(
-            secret.toByteArray(),
+            pin.toByteArray(),
             salt.toByteArray(),
             CPU_COST,
             MEMORY_COST,
