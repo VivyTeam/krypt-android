@@ -13,7 +13,7 @@ import com.vivy.symmetric.AesGcmNoPadding
 
 object EmergencyStickerEncryption {
     var debug: Boolean = false
-    internal const val FIRST_SALT = "5f1288159017d636c13c1c1b2835b8a871780bc2"
+    internal const val CHARLIE_CONSTANT_SALT = "5f1288159017d636c13c1c1b2835b8a871780bc2"
     internal const val CPU_COST = 16384
     internal const val MEMORY_COST = 10
     internal const val PARALLELIZATION_PARAM = 1
@@ -67,7 +67,7 @@ object EmergencyStickerEncryption {
     }
 
     fun getFingerprintSecret(secret: String): String{
-        return CHARLIE + ":" + getHash(secret, FIRST_SALT).toHexString()
+        return CHARLIE + ":" + getHash(secret, CHARLIE_CONSTANT_SALT).toHexString()
     }
 
     private fun getHash(

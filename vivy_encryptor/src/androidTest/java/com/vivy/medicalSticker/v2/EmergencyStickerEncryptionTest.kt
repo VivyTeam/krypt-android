@@ -4,7 +4,7 @@ import com.vivy.e2e.DecryptionFailed
 import com.vivy.medicalSticker.MedStickerCipherAttr.Companion.CHARLIE
 import com.vivy.medicalSticker.MedStickerKeyGenerator
 import com.vivy.medicalSticker.common.toHexString
-import com.vivy.medicalSticker.v2.EmergencyStickerEncryption.FIRST_SALT
+import com.vivy.medicalSticker.v2.EmergencyStickerEncryption.CHARLIE_CONSTANT_SALT
 import com.vivy.medicalSticker.v2.EmergencyStickerEncryption.HASH_LENGTH
 import com.vivy.support.SecureRandomGenerator
 import org.assertj.core.api.Assertions.assertThat
@@ -29,7 +29,7 @@ class EmergencyStickerEncryptionTest{
 
         val generatedFingerprintSecret = MedStickerKeyGenerator.getGenSCryptKey(
             pin.toByteArray(),
-            FIRST_SALT.toByteArray(),
+            CHARLIE_CONSTANT_SALT.toByteArray(),
             EmergencyStickerEncryption.CPU_COST,
             EmergencyStickerEncryption.MEMORY_COST,
             EmergencyStickerEncryption.PARALLELIZATION_PARAM,
