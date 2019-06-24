@@ -64,9 +64,9 @@ class EmergencyStickerEncryptionTest{
             .withFailMessage("generated key should be exactly as scrypt key")
             .isTrue()
 
-        assertThat(Arrays.equals(pinFingerprint.fingerprintFile, generatedPinFingerprint.copyOfRange(HASH_LENGTH / 2, HASH_LENGTH)))
+        assertThat(pinFingerprint.fingerprintFile)
             .withFailMessage("generated key should be exactly as scrypt key")
-            .isTrue()
+            .isEqualTo( CHARLIE + ":" + generatedPinFingerprint.copyOfRange(HASH_LENGTH / 2, HASH_LENGTH).toHexString())
     }
 
     @Test

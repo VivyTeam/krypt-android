@@ -61,7 +61,9 @@ object EmergencyStickerEncryption {
         secondSalt:String
     ): EmergencyStickerKeyPairs{
         val hash = getHash(secret + backEndSecret, secondSalt)
-        return EmergencyStickerKeyPairs(hash.dropLast(HASH_LENGTH / 2).toByteArray(), hash.drop(HASH_LENGTH / 2).toByteArray())
+        val key = hash.dropLast(HASH_LENGTH / 2).toByteArray()
+        val fingerPrintFile = CHARLIE + ":" + hash.drop(HASH_LENGTH / 2).toByteArray().toHexString()
+        return EmergencyStickerKeyPairs(key, fingerPrintFile)
     }
 
     fun getFingerprintSecret(secret: String): String{
@@ -110,7 +112,7 @@ object EmergencyStickerEncryption {
 
     data class EmergencyStickerKeyPairs(
         val key: ByteArray, // first half of finger print
-        val fingerprintFile: ByteArray // second half of finger print
+        val fingerprintFile: String // second half of finger print
     )
 
     infix fun setDebugTo(debug: Boolean) {
