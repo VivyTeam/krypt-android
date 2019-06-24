@@ -12,8 +12,6 @@ import org.junit.Before
 import org.junit.Test
 import java.util.Arrays
 import org.assertj.core.api.Assertions.assertThatThrownBy
-import timber.log.Timber
-import java.security.SecureRandom
 
 class EmergencyStickerEncryptionTest{
     val service = EmergencyStickerEncryption
@@ -48,7 +46,7 @@ class EmergencyStickerEncryptionTest{
         val backendSecret = "someRandomBackendSecret"
         val secondSalt = "someRandomSecondSalt"
 
-        val pinFingerprint = service.getPinFingerprint(pin, backendSecret, secondSalt)
+        val pinFingerprint = service.getKeyAndFingerprintFile(pin, backendSecret, secondSalt)
 
         val finalPin = pin + backendSecret
         val generatedPinFingerprint = MedStickerKeyGenerator.getGenSCryptKey(
@@ -81,7 +79,7 @@ class EmergencyStickerEncryptionTest{
         assertThat(Arrays.equals(encryptedData.data, secret.toByteArray()))
             .isFalse()
 
-        val decrypted = service.decrypt(pin, backendSecret, secondSalt, encryptedData.attr.iv, encryptedData.data, CHARLIE)
+        val decrypted = service.decrypt(pin, backendSecret, secondSalt, encryptedData.attr.iv, encryptedData.data)
 
         assertThat(String(decrypted))
             .isEqualTo(secret)
@@ -98,7 +96,7 @@ class EmergencyStickerEncryptionTest{
 
         val encryptedData = service.encrypt(pin, backendSecret, secondSalt, secret.toByteArray(), getRandomAesIv())
 
-        assertThatThrownBy { service.decrypt("wrongPin", backendSecret, secondSalt, encryptedData.attr.iv, encryptedData.data, CHARLIE) }
+        assertThatThrownBy { service.decrypt("wrongPin", backendSecret, secondSalt, encryptedData.attr.iv, encryptedData.data) }
             .isInstanceOf(DecryptionFailed::class.java)
             .hasNoCause()
     }

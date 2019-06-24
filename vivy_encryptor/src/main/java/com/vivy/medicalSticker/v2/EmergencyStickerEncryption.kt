@@ -42,7 +42,7 @@ object EmergencyStickerEncryption {
         iv: ByteArray
     ): EncryptedEmergencySticker {
 
-        val keyPairs = getPinFingerprint(pin, backEndSecret, secondSalt)
+        val keyPairs = getKeyAndFingerprintFile(pin, backEndSecret, secondSalt)
         val encryptedData = encrypt(data, keyPairs.key, iv)
         val attr = MedStickerCipherAttr(pin.toByteArray(), iv, CHARLIE)
 
@@ -55,15 +55,15 @@ object EmergencyStickerEncryption {
      * pinSecret: Generated from Backend
      */
 
-    internal fun getPinFingerprint(
+    internal fun getKeyAndFingerprintFile(
+        pin: String,
         secret: String,
-        backEndSecret: String,
-        secondSalt:String
+        salt:String
     ): EmergencyStickerKeyPairs{
-        val hash = getHash(secret + backEndSecret, secondSalt)
+        val hash = getHash(pin + secret, salt)
         val key = hash.dropLast(HASH_LENGTH / 2).toByteArray()
-        val fingerPrintFile = CHARLIE + ":" + hash.drop(HASH_LENGTH / 2).toByteArray().toHexString()
-        return EmergencyStickerKeyPairs(key, fingerPrintFile)
+        val fingerprintFile = CHARLIE + ":" + hash.drop(HASH_LENGTH / 2).toByteArray().toHexString()
+        return EmergencyStickerKeyPairs(key, fingerprintFile)
     }
 
     fun getFingerprintSecret(secret: String): String{
@@ -98,20 +98,20 @@ object EmergencyStickerEncryption {
 
     fun decrypt(
         pin: String,
-        backEndSecret: String,
-        secondSalt:String,
+        secret: String,
+        salt:String,
         iv:ByteArray,
         data: ByteArray
     ): ByteArray {
 
-        val keyPairs = getPinFingerprint(pin, backEndSecret, secondSalt)
+        val keyPairs = getKeyAndFingerprintFile(pin, secret, salt)
 
         return decrypt(data, keyPairs.key, iv)
     }
 
     data class EmergencyStickerKeyPairs(
-        val key: ByteArray, // first half of finger print
-        val fingerprintFile: String // second half of finger print
+        val key: ByteArray, // first half of fingerprint
+        val fingerprintFile: String // second half of fingerprint
     )
 
     infix fun setDebugTo(debug: Boolean) {
