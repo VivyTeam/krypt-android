@@ -1,11 +1,11 @@
-package com.vivy.medicalSticker.v2
+package com.vivy.medicalSticker.charlie
 
 import com.vivy.e2e.DecryptionFailed
 import com.vivy.medicalSticker.MedStickerCipherAttr.Companion.CHARLIE
 import com.vivy.medicalSticker.MedStickerKeyGenerator
 import com.vivy.medicalSticker.common.toHexString
-import com.vivy.medicalSticker.v2.EmergencyStickerEncryption.CHARLIE_CONSTANT_SALT
-import com.vivy.medicalSticker.v2.EmergencyStickerEncryption.HASH_LENGTH
+import com.vivy.medicalSticker.charlie.EmergencyStickerEncryption.CHARLIE_CONSTANT_SALT
+import com.vivy.medicalSticker.charlie.EmergencyStickerEncryption.HASH_LENGTH
 import com.vivy.support.SecureRandomGenerator
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before

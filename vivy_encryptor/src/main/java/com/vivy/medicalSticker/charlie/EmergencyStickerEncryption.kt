@@ -1,4 +1,4 @@
-package com.vivy.medicalSticker.v2
+package com.vivy.medicalSticker.charlie
 
 import com.vivy.e2e.DecryptionFailed
 import com.vivy.e2e.EncryptionFailed
@@ -7,8 +7,7 @@ import com.vivy.medicalSticker.MedStickerCipherAttr.Companion.CHARLIE
 import com.vivy.medicalSticker.MedStickerEncryption
 import com.vivy.medicalSticker.MedStickerKeyGenerator
 import com.vivy.medicalSticker.common.toHexString
-import com.vivy.medicalSticker.v2.model.EncryptedEmergencySticker
-import com.vivy.support.SecureRandomGenerator
+import com.vivy.medicalSticker.charlie.model.EncryptedEmergencySticker
 import com.vivy.symmetric.AesGcmNoPadding
 
 object EmergencyStickerEncryption {

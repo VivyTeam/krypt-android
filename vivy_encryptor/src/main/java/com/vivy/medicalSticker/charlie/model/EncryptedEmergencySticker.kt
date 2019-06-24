@@ -1,4 +1,4 @@
-package com.vivy.medicalSticker.v2.model
+package com.vivy.medicalSticker.charlie.model
 
 import com.vivy.medicalSticker.MedStickerCipherAttr
 
