@@ -65,7 +65,7 @@ object EmergencyStickerEncryption {
     }
 
     fun getFingerprintSecret(secret: String): String{
-        return getHash(secret, FIRST_SALT).toHexString()
+        return CHARLIE + ":" + getHash(secret, FIRST_SALT).toHexString()
     }
 
     private fun getHash(

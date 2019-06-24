@@ -38,7 +38,7 @@ class EmergencyStickerEncryptionTest{
             HASH_LENGTH
         ).toHexString()
 
-        assertThat(fingerprintSecret).isEqualTo(generatedFingerprintSecret)
+        assertThat(fingerprintSecret).isEqualTo(CHARLIE + ":" + generatedFingerprintSecret)
             .withFailMessage("generated key should be exactly as scrypt key")
     }
 
