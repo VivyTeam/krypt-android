@@ -51,8 +51,8 @@ object EmergencyStickerEncryption {
 
     /**
      * pin: From QR Code
-     * pinSalt: Generated from Backend
-     * pinSecret: Generated from Backend
+     * salt: Generated from Backend
+     * secret: Generated from Backend
      */
 
     internal fun getKeyAndFingerprintFile(
