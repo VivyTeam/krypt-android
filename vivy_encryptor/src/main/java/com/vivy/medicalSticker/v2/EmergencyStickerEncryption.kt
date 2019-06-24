@@ -101,8 +101,7 @@ object EmergencyStickerEncryption {
         backEndSecret: String,
         secondSalt:String,
         iv:ByteArray,
-        data: ByteArray,
-        version: String
+        data: ByteArray
     ): ByteArray {
 
         val keyPairs = getPinFingerprint(pin, backEndSecret, secondSalt)
