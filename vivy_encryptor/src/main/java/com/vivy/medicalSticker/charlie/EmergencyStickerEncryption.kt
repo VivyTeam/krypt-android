@@ -6,7 +6,6 @@ import com.vivy.medicalSticker.MedStickerCipherAttr
 import com.vivy.medicalSticker.MedStickerCipherAttr.Companion.CHARLIE
 import com.vivy.medicalSticker.MedStickerEncryption
 import com.vivy.medicalSticker.MedStickerKeyGenerator
-import com.vivy.medicalSticker.common.toHexString
 import com.vivy.medicalSticker.charlie.model.EncryptedEmergencySticker
 import com.vivy.symmetric.AesGcmNoPadding
 
@@ -61,12 +60,12 @@ object EmergencyStickerEncryption {
     ): EmergencyStickerKeyPairs{
         val hash = getHash(pin + secret, salt)
         val key = hash.dropLast(HASH_LENGTH / 2).toByteArray()
-        val fingerprintFile = CHARLIE + ":" + hash.drop(HASH_LENGTH / 2).toByteArray().toHexString()
+        val fingerprintFile = hash.drop(HASH_LENGTH / 2).toByteArray().asFingerprint()
         return EmergencyStickerKeyPairs(key, fingerprintFile)
     }
 
     fun getFingerprintSecret(pin: String): String{
-        return CHARLIE + ":" + getHash(pin, CHARLIE_CONSTANT_SALT).toHexString()
+        return getHash(pin, CHARLIE_CONSTANT_SALT).asFingerprint()
     }
 
     private fun getHash(
@@ -108,6 +107,7 @@ object EmergencyStickerEncryption {
         return decrypt(data, keyPairs.key, iv)
     }
 
+
     data class EmergencyStickerKeyPairs(
         val key: ByteArray, // first half of fingerprint
         val fingerprintFile: String // second half of fingerprint
@@ -115,5 +115,11 @@ object EmergencyStickerEncryption {
 
     infix fun setDebugTo(debug: Boolean) {
         this.debug = debug
+    }
+
+    private fun ByteArray.asFingerprint() : String {
+        return "$CHARLIE:" + this.joinToString("") {
+            java.lang.String.format("%02x", it)
+        }
     }
 }

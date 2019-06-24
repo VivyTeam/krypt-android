@@ -1,17 +1,16 @@
 package com.vivy.medicalSticker.charlie
 
 import com.vivy.e2e.DecryptionFailed
-import com.vivy.medicalSticker.MedStickerCipherAttr.Companion.CHARLIE
+import com.vivy.medicalSticker.MedStickerCipherAttr
 import com.vivy.medicalSticker.MedStickerKeyGenerator
-import com.vivy.medicalSticker.common.toHexString
 import com.vivy.medicalSticker.charlie.EmergencyStickerEncryption.CHARLIE_CONSTANT_SALT
 import com.vivy.medicalSticker.charlie.EmergencyStickerEncryption.HASH_LENGTH
 import com.vivy.support.SecureRandomGenerator
 import org.assertj.core.api.Assertions.assertThat
+import org.assertj.core.api.Assertions.assertThatThrownBy
 import org.junit.Before
 import org.junit.Test
 import java.util.Arrays
-import org.assertj.core.api.Assertions.assertThatThrownBy
 
 class EmergencyStickerEncryptionTest{
     val service = EmergencyStickerEncryption
@@ -34,9 +33,9 @@ class EmergencyStickerEncryptionTest{
             EmergencyStickerEncryption.MEMORY_COST,
             EmergencyStickerEncryption.PARALLELIZATION_PARAM,
             HASH_LENGTH
-        ).toHexString()
+        ).asFingerprint()
 
-        assertThat(fingerprintSecret).isEqualTo(CHARLIE + ":" + generatedFingerprintSecret)
+        assertThat(fingerprintSecret).isEqualTo(generatedFingerprintSecret)
             .withFailMessage("generated key should be exactly as scrypt key")
     }
 
@@ -64,7 +63,7 @@ class EmergencyStickerEncryptionTest{
 
         assertThat(pinFingerprint.fingerprintFile)
             .withFailMessage("generated key should be exactly as scrypt key")
-            .isEqualTo( CHARLIE + ":" + generatedPinFingerprint.copyOfRange(HASH_LENGTH / 2, HASH_LENGTH).toHexString())
+            .isEqualTo(generatedPinFingerprint.copyOfRange(HASH_LENGTH / 2, HASH_LENGTH).asFingerprint())
     }
 
     @Test
@@ -103,5 +102,11 @@ class EmergencyStickerEncryptionTest{
 
     private fun getRandomAesIv(): ByteArray {
         return SecureRandomGenerator().bytes(EmergencyStickerEncryption.AES_IV_LENGTH)
+    }
+
+    private fun ByteArray.asFingerprint() : String {
+        return "${MedStickerCipherAttr.CHARLIE}:" + this.joinToString("") {
+            java.lang.String.format("%02x", it)
+        }
     }
 }
