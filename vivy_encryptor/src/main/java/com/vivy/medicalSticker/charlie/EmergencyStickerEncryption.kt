@@ -34,13 +34,13 @@ object EmergencyStickerEncryption {
 
     fun encrypt(
         pin: String,
-        backEndSecret: String,
-        secondSalt:String,
-        data: ByteArray,
-        iv: ByteArray
+        secret: String,
+        salt: String,
+        iv: ByteArray,
+        data: ByteArray
     ): EncryptedEmergencySticker {
 
-        val keyPairs = getKeyAndFingerprintFile(pin, backEndSecret, secondSalt)
+        val keyPairs = getKeyAndFingerprintFile(pin, secret, salt)
         val encryptedData = encrypt(data, keyPairs.key, iv)
         val attr = MedStickerCipherAttr(pin.toByteArray(), iv, CHARLIE)
 
@@ -56,7 +56,7 @@ object EmergencyStickerEncryption {
     internal fun getKeyAndFingerprintFile(
         pin: String,
         secret: String,
-        salt:String
+        salt: String
     ): EmergencyStickerKeyPairs{
         val hash = getHash(pin + secret, salt)
         val key = hash.dropLast(HASH_LENGTH / 2).toByteArray()
@@ -97,8 +97,8 @@ object EmergencyStickerEncryption {
     fun decrypt(
         pin: String,
         secret: String,
-        salt:String,
-        iv:ByteArray,
+        salt: String,
+        iv: ByteArray,
         data: ByteArray
     ): ByteArray {
 
