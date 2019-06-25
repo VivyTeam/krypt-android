@@ -8,5 +8,6 @@ data class MedStickerCipherAttr(
     companion object {
         const val ADAM = "adam"
         const val BRITNEY = "britney"
+        const val CHARLIE = "charlie"
     }
 }
