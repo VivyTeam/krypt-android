@@ -73,7 +73,7 @@ class EmergencyStickerEncryptionTest{
         val secondSalt = "someRandomSecondSalt"
         val secret = "secret"
 
-        val encryptedData = service.encrypt(pin, backendSecret, secondSalt, secret.toByteArray(), getRandomAesIv())
+        val encryptedData = service.encrypt(pin, backendSecret, secondSalt, getRandomAesIv(), secret.toByteArray())
 
         assertThat(Arrays.equals(encryptedData.data, secret.toByteArray()))
             .isFalse()
