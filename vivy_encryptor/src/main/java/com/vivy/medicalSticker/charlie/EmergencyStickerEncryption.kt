@@ -42,7 +42,7 @@ object EmergencyStickerEncryption {
 
         val keyPairs = getKeyAndFingerprintFile(pin, secret, salt)
         val encryptedData = encrypt(data, keyPairs.key, iv)
-        val attr = MedStickerCipherAttr(pin.toByteArray(), iv, CHARLIE)
+        val attr = MedStickerCipherAttr(keyPairs.key, iv, CHARLIE)
 
         return EncryptedEmergencySticker(encryptedData, keyPairs.fingerprintFile, attr)
     }
