@@ -82,7 +82,7 @@ object EmergencyStickerEncryption {
         )
     }
 
-    internal fun decrypt(
+    fun decrypt(
         encryptedData: ByteArray,
         key: ByteArray,
         iv: ByteArray
