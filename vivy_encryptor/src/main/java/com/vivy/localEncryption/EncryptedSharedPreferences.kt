@@ -1,0 +1,44 @@
+package com.vivy.localEncryption
+
+import com.google.common.base.Optional
+import io.reactivex.Completable
+import io.reactivex.Observable
+import io.reactivex.Single
+import polanski.option.Option
+
+interface EncryptedSharedPreferences {
+    fun update(
+        key: String,
+        value: String,
+        user: String
+    ): Observable<String>
+
+    fun update(
+        key: String,
+        value: String
+    ): Observable<String>
+
+    fun delete(
+        key: String,
+        user: String
+    ): Completable
+
+    fun delete(
+        key: String
+    ): Completable
+
+    fun get(
+        key: String,
+        user: String
+    ): Single<Optional<String>>
+
+    fun get(
+        key: String
+    ): Single<Optional<String>>
+
+
+    fun <J> get(
+        key: String,
+        clazz: Class<J>
+    ): Single<Option<J>>
+}

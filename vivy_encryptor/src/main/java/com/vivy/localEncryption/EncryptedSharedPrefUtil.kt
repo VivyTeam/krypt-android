@@ -1,6 +1,7 @@
 package com.vivy.localEncryption
 
 import android.content.SharedPreferences
+import com.google.common.annotations.VisibleForTesting
 import com.google.common.base.Optional
 import com.google.gson.GsonBuilder
 import com.vivy.e2e.E2EEncryption.Encrypted
@@ -21,20 +22,21 @@ open class EncryptedSharedPrefUtil(
     private val sharedPreferences: SharedPreferences,
     private val keyProvider: KeyProvider,
     private val userIdentifier: UserIdentifier
-) {
+) : EncryptedSharedPreferences {
     private val GSON = GsonBuilder()
         .disableHtmlEscaping()
         .create()
     private val gzip = Gzip()
     private val base64 = Base64Encoder
     private val encrypt: EHREncryption by lazy {
-                EHREncryption()
+        EHREncryption()
     }
 
-    fun update(
+
+    override fun update(
         key: String,
         value: String,
-        user: String = userIdentifier.getId()
+        user: String
     ): Observable<String> {
         return Observable.just(value)
             .switchMap { encrypt(it) }
@@ -45,18 +47,18 @@ open class EncryptedSharedPrefUtil(
 
     }
 
-    fun delete(
+    override fun delete(
         key: String,
-        user: String = userIdentifier.getId()
+        user: String
     ): Completable {
         return Completable.fromAction {
             sharedPreferences.edit().remove(key + user).apply()
         }
     }
 
-     fun get(
+    override fun get(
         key: String,
-        user: String = userIdentifier.getId()
+        user: String
     ): Single<Optional<String>> {
         return Single.defer {
 
@@ -68,11 +70,11 @@ open class EncryptedSharedPrefUtil(
         }
     }
 
-    fun <J> get(
+    override fun <J> get(
         key: String,
         clazz: Class<J>
     ): Single<Option<J>> {
-        return get(key)
+        return get(key, userIdentifier.getId())
             .filter { it.isPresent }
             .map { it.or("") }
             .map { Option.tryAsOption<J> { GSON.fromJson(it, clazz) } }
@@ -81,13 +83,34 @@ open class EncryptedSharedPrefUtil(
 
     }
 
+    override fun update(key: String, value: String): Observable<String> {
+        return update(key, value, userIdentifier.getId())
+    }
+
+    override fun delete(key: String): Completable {
+        return delete(key, userIdentifier.getId())
+    }
+
+    override fun get(key: String): Single<Optional<String>> {
+        return get(key, userIdentifier.getId())
+    }
+    
+
     fun decrypt(encryptedText: String): Single<Optional<String>> {
         return Single.just(encryptedText)
             .map { base64.debase64(it) }
             .map { String(it) }
             .map {
-                GSON.fromJson(it, Encrypted::class.java) }
-            .zipWith(keyProvider.privateKey, BiFunction<Encrypted, PrivateKey, ByteArray> { encrypted, privateKey -> encrypt.decrypt(privateKey, encrypted) })
+                GSON.fromJson(it, Encrypted::class.java)
+            }
+            .zipWith(
+                keyProvider.privateKey,
+                BiFunction<Encrypted, PrivateKey, ByteArray> { encrypted, privateKey ->
+                    encrypt.decrypt(
+                        privateKey,
+                        encrypted
+                    )
+                })
             .map { gzip.gunzip(it) }
             .map { Optional.fromNullable(String(it)) }
             .onErrorReturnItem(Optional.absent())
@@ -99,9 +122,11 @@ open class EncryptedSharedPrefUtil(
         return Observable.just(plainText)
             .map { it.toByteArray() }
             .map { gzip.gzip(it) }
-            .zipWith(keyProvider.publicKey.toObservable(), BiFunction<ByteArray, PublicKey, Encrypted> { bytes, pubKey ->
-                encrypt.encrypt(pubKey, bytes)
-            })
+            .zipWith(
+                keyProvider.publicKey.toObservable(),
+                BiFunction<ByteArray, PublicKey, Encrypted> { bytes, pubKey ->
+                    encrypt.encrypt(pubKey, bytes)
+                })
             .map { GSON.toJson(it) }
             .map { base64.base64(it.toByteArray()) }
             .doOnError {
