@@ -94,7 +94,7 @@ open class EncryptedSharedPrefUtil(
     override fun get(key: String): Single<Optional<String>> {
         return get(key, userIdentifier.getId())
     }
-    
+
 
     fun decrypt(encryptedText: String): Single<Optional<String>> {
         return Single.just(encryptedText)
