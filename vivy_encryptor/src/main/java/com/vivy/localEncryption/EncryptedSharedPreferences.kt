@@ -18,6 +18,17 @@ interface EncryptedSharedPreferences {
         value: String
     ): Observable<String>
 
+    fun <J> update(
+        key: String,
+        value: J
+    ): Observable<String>
+
+    fun <J> update(
+        key: String,
+        value: J,
+        user: String
+    ): Observable<String>
+
     fun delete(
         key: String,
         user: String
@@ -41,4 +52,14 @@ interface EncryptedSharedPreferences {
         key: String,
         clazz: Class<J>
     ): Single<Option<J>>
+
+
+    fun isEntryAvailable(
+        key: String,
+        user: String
+    ): Single<Boolean>
+
+    fun isEntryAvailable(
+        key: String
+    ): Single<Boolean>
 }
