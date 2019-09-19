@@ -23,6 +23,8 @@ open class EncryptedSharedPrefUtil(
     private val keyProvider: KeyProvider,
     private val userIdentifier: UserIdentifier
 ) : EncryptedSharedPreferences {
+
+
     private val GSON = GsonBuilder()
         .disableHtmlEscaping()
         .create()
@@ -46,6 +48,15 @@ open class EncryptedSharedPrefUtil(
             }
 
     }
+
+    override fun <J> update(key: String, value: J): Observable<String> {
+        return update(key, GSON.toJson(value))
+    }
+
+    override fun <J> update(key: String, value: J, user: String): Observable<String> {
+        return update(key, GSON.toJson(value), user)
+    }
+
 
     override fun delete(
         key: String,
@@ -93,6 +104,16 @@ open class EncryptedSharedPrefUtil(
 
     override fun get(key: String): Single<Optional<String>> {
         return get(key, userIdentifier.getId())
+    }
+
+    override fun isEntryAvailable(key: String, user: String): Single<Boolean> {
+        return get(key, user)
+            .map { it.isPresent }
+    }
+
+    override fun isEntryAvailable(key: String): Single<Boolean> {
+        return get(key, userIdentifier.getId())
+            .map { it.isPresent }
     }
 
 
