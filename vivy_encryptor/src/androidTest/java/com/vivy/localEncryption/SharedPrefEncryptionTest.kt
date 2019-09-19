@@ -105,4 +105,47 @@ class SharedPrefEncryptionTest {
 
          assertFalse(encryptedSharedPrefUtil.get(key).blockingGet().isPresent)
     }
+
+
+    @Test fun testGetForNonExistentValuePassingId() {
+
+        encryptedSharedPrefUtil = EncryptedSharedPrefUtil(sharedPreferences, generateRandomTestKey(), userIdentifier)
+
+        val option = encryptedSharedPrefUtil.get("KEY_TEST_FOR_KEY_THAT_DOESN_T_EXIST",userIdentifier.getId()).blockingGet()
+
+        assertFalse(option.isPresent)
+    }
+
+    @Test fun testUpdateExistingValuePassingId() {
+
+        encryptedSharedPrefUtil = EncryptedSharedPrefUtil(sharedPreferences, generateRandomTestKey(), userIdentifier)
+
+        val expectedResult = "expected test result!"
+
+        encryptedSharedPrefUtil.update("KEY_TEST_FOR_KEY_THAT_EXISTS", expectedResult).blockingFirst()
+
+        val option = encryptedSharedPrefUtil.get("KEY_TEST_FOR_KEY_THAT_EXISTS",userIdentifier.getId()).blockingGet()
+
+        assertTrue(option.isPresent)
+        assertEquals(expectedResult, option.get())
+    }
+
+    @Test fun testDeleteExistingValuePassingId() {
+
+        encryptedSharedPrefUtil = EncryptedSharedPrefUtil(sharedPreferences, generateRandomTestKey(), userIdentifier)
+
+        val expectedResult = "expected test result!"
+        val key="KEY_TEST_FOR_KEY_THAT_EXISTS"
+        encryptedSharedPrefUtil.update(key, expectedResult,userIdentifier.getId()).blockingFirst()
+
+        val option = encryptedSharedPrefUtil.get(key).blockingGet()
+
+        assertTrue(option.isPresent)
+        assertEquals(expectedResult, option.get())
+
+        encryptedSharedPrefUtil.delete(key,userIdentifier.getId()).blockingGet()
+
+        assertFalse(encryptedSharedPrefUtil.get(key).blockingGet().isPresent)
+    }
+
 }
