@@ -1,5 +1,6 @@
 package com.vivy.support
 
+import com.google.crypto.tink.subtle.EllipticCurves
 import org.bouncycastle.asn1.pkcs.EncryptedPrivateKeyInfo
 import org.bouncycastle.asn1.pkcs.PrivateKeyInfo
 import org.bouncycastle.openssl.PEMKeyPair
@@ -15,6 +16,8 @@ import java.io.StringReader
 import java.io.StringWriter
 import java.security.KeyFactory
 import java.security.PrivateKey
+import java.security.interfaces.ECPrivateKey
+import java.security.interfaces.ECPublicKey
 import java.security.interfaces.RSAPrivateKey
 import java.security.interfaces.RSAPublicKey
 import java.security.spec.PKCS8EncodedKeySpec
@@ -28,6 +31,13 @@ class KeyConverter {
 
     fun toPem(rsaPublicKey: RSAPublicKey): String {
         return toPem(rsaPublicKey.encoded, "PUBLIC KEY")
+    }
+    fun toPem(rsaPublicKey: ECPublicKey): String {
+        return toPem(rsaPublicKey.encoded, "PUBLIC KEY")
+    }
+
+    fun toPem(rsaPublicKey: ECPrivateKey): String {
+        return toPem(rsaPublicKey.encoded, "EC PRIVATE KEY")
     }
 
     fun toPem(privateKeyInfo: PrivateKeyInfo): String {
@@ -76,6 +86,12 @@ class KeyConverter {
         }
     }
 
+    fun toECPublicKey(pem: String): ECPublicKey {
+        val `in` = StringReader(pem)
+        val reader = PemReader(`in`)
+        val pemObject = reader.readPemObject()
+        return EllipticCurves.getEcPublicKey(pemObject.content)
+    }
     /*
     https://stackoverflow.com/a/41953072
     https://gist.github.com/markscottwright/4bd563fa91e9a72bf1ce12a0ff6567aa#gistcomment-2657458
