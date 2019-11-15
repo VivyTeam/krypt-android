@@ -87,8 +87,8 @@ class KeyConverter {
     }
 
     fun toECPublicKey(pem: String): ECPublicKey {
-        val `in` = StringReader(pem)
-        val reader = PemReader(`in`)
+        val inputReader = StringReader(pem)
+        val reader = PemReader(inputReader)
         val pemObject = reader.readPemObject()
         return EllipticCurves.getEcPublicKey(pemObject.content)
     }
