@@ -29,7 +29,7 @@ ext {
                         options     : "com.github.tomaszpolanski:options:${options}",
                         guava       : "com.google.guava:guava:$guava",
                         bouncyCastle: "org.bouncycastle:bcpkix-jdk15on:${bouncyCastle}",
-                        elepticCurve: "com.google.crypto.tink:tink:${elliptic}",
+                        elepticCurve: "com.google.crypto.tink:tink-android:${elliptic}",
   ]
 
   commonTestDependencies = [testRunner             : "androidx.test:runner:$androidX",
