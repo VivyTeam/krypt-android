@@ -49,6 +49,7 @@ dependencies {
   api commonDependencies.options
   api commonDependencies.guava
   api commonDependencies.bouncyCastle
+  api commonDependencies.elepticCurve
 
   testImplementation 'junit:junit:4.12'
   androidTestImplementation commonTestDependencies.testRunner
