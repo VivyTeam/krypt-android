@@ -1,11 +1,10 @@
 package com.vivy.support
 
 import android.util.Base64
-import org.junit.Test
-
 import org.hamcrest.MatcherAssert.assertThat
 import org.hamcrest.Matchers.equalTo
 import org.hamcrest.Matchers.not
+import org.junit.Test
 
 class GzipTest {
 

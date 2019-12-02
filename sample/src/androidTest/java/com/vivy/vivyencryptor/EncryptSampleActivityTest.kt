@@ -21,7 +21,9 @@ import org.junit.Test
 
 class EncryptSampleActivityTest {
 
-    @JvmField @Rule val activity: ActivityTestRule<EncryptSampleActivity> = ActivityTestRule(EncryptSampleActivity::class.java, true, false)
+    @JvmField
+    @Rule
+    val activity: ActivityTestRule<EncryptSampleActivity> = ActivityTestRule(EncryptSampleActivity::class.java, true, false)
 
     @Before
     fun setup() {
@@ -40,13 +42,13 @@ class EncryptSampleActivityTest {
         activity.launchActivity(null)
         //encrypt
         onView(withId(R.id.planText))
-            .perform(clearText(), typeText("secret stuff"))
+                .perform(clearText(), typeText("secret stuff"))
         onView(withId(R.id.encryptAction)).perform(click())
 
 
         onView(withId(R.id.encryptedText))
-            .check(ViewAssertions.matches(isDisplayed()))
-            .check(ViewAssertions.matches(not(withText(""))))
+                .check(ViewAssertions.matches(isDisplayed()))
+                .check(ViewAssertions.matches(not(withText(""))))
 
 
         //decrypt

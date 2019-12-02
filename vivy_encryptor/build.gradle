@@ -3,61 +3,61 @@ apply plugin: 'kotlin-android'
 
 android {
 
-  def androidConfig = rootProject.ext.android
+    def androidConfig = rootProject.ext.android
 
-  compileSdkVersion androidConfig.compileSdkVersion
+    compileSdkVersion androidConfig.compileSdkVersion
 
 
-  defaultConfig {
-    minSdkVersion androidConfig.minSdkVersion
-    targetSdkVersion androidConfig.targetSdkVersion
-    versionCode 1
-    versionName "1.0"
-    testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
-  }
-
-  buildTypes {
-    debug {
-      minifyEnabled false
-      proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+    defaultConfig {
+        minSdkVersion androidConfig.minSdkVersion
+        targetSdkVersion androidConfig.targetSdkVersion
+        versionCode 1
+        versionName "1.0"
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
-    staging {
-      initWith debug
-      minifyEnabled true
-      proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+
+    buildTypes {
+        debug {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+        staging {
+            initWith debug
+            minifyEnabled true
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
     }
-    release {
-      minifyEnabled false
-      proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
     }
-  }
-  compileOptions {
-    sourceCompatibility JavaVersion.VERSION_1_8
-    targetCompatibility JavaVersion.VERSION_1_8
-  }
-  lintOptions {
-    warning 'InvalidPackage'
-  }
+    lintOptions {
+        warning 'InvalidPackage'
+    }
 
 }
 
 dependencies {
-  implementation fileTree(dir: 'libs', include: ['*.jar'])
-  api commonDependencies.timber
-  api commonDependencies.gson
-  api commonDependencies.rxJava2
-  api commonDependencies.options
-  api commonDependencies.guava
-  api commonDependencies.bouncyCastle
-  api commonDependencies.elepticCurve
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    api commonDependencies.timber
+    api commonDependencies.gson
+    api commonDependencies.rxJava2
+    api commonDependencies.options
+    api commonDependencies.guava
+    api commonDependencies.bouncyCastle
+    api commonDependencies.elepticCurve
 
-  testImplementation 'junit:junit:4.12'
-  androidTestImplementation commonTestDependencies.testRunner
-  androidTestImplementation commonTestDependencies.espresso
-  androidTestImplementation commonTestDependencies.assertj
-  testImplementation commonTestDependencies.assertj
-  api "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+    testImplementation 'junit:junit:4.12'
+    androidTestImplementation commonTestDependencies.testRunner
+    androidTestImplementation commonTestDependencies.espresso
+    androidTestImplementation commonTestDependencies.assertj
+    testImplementation commonTestDependencies.assertj
+    api "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
 }
 repositories {
-  mavenCentral()
+    mavenCentral()
 }

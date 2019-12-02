@@ -2,7 +2,6 @@ package com.vivy.asymmetric
 
 import com.vivy.asymmetric.RsaOperationHelper.rsaOperation
 import com.vivy.support.Base64Encoder
-import java.lang.Exception
 import java.nio.charset.StandardCharsets
 import java.security.PrivateKey
 import java.security.PublicKey
@@ -23,16 +22,16 @@ class RsaEcbPkcs1 : AsymmetricEncryption {
         }
 
     override fun encryptText(
-        publicKey: PublicKey,
-        decryptedText: String
+            publicKey: PublicKey,
+            decryptedText: String
     ): String {
         val encryptedBytes = rsaOperation(
-            {
-                val cipher = rsaCipher
-                cipher.init(Cipher.ENCRYPT_MODE, publicKey)
-                cipher
-            },
-            decryptedText.toByteArray(StandardCharsets.UTF_8)
+                {
+                    val cipher = rsaCipher
+                    cipher.init(Cipher.ENCRYPT_MODE, publicKey)
+                    cipher
+                },
+                decryptedText.toByteArray(StandardCharsets.UTF_8)
         )
 
 
@@ -40,8 +39,8 @@ class RsaEcbPkcs1 : AsymmetricEncryption {
     }
 
     override fun decryptText(
-        privateKey: PrivateKey,
-        base64AndEncryptedContent: String
+            privateKey: PrivateKey,
+            base64AndEncryptedContent: String
     ): String {
         val encryptedContentBytes = base64.debase64(base64AndEncryptedContent)
 

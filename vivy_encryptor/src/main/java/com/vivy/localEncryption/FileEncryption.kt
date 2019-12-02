@@ -25,18 +25,19 @@ class FileEncryption(private var keyProvider: KeyProvider) {
     private val gzip by lazy {
         Gzip()
     }
-    fun decrypt(byteArray: ByteArray): Single<Optional<ByteArray>> {
-        return  Single.just(String(byteArray))
 
-                .map { base64.debase64(it)}
+    fun decrypt(byteArray: ByteArray): Single<Optional<ByteArray>> {
+        return Single.just(String(byteArray))
+
+                .map { base64.debase64(it) }
                 .map { String(it) }
                 .map { GSON.fromJson(it, E2EEncryption.Encrypted::class.java) }
-                .zipWith(keyProvider.privateKey, BiFunction<E2EEncryption.Encrypted, PrivateKey,ByteArray> { encrypted, privateKey ->
+                .zipWith(keyProvider.privateKey, BiFunction<E2EEncryption.Encrypted, PrivateKey, ByteArray> { encrypted, privateKey ->
                     encryptor.decrypt(privateKey, encrypted)
                 })
                 .map { gzip.gunzip(it) }
                 .map { Optional.fromNullable(it) }
-                .doOnError{ Timber.e(it)}
+                .doOnError { Timber.e(it) }
                 .onErrorReturnItem(Optional.absent())
 
     }
@@ -44,13 +45,13 @@ class FileEncryption(private var keyProvider: KeyProvider) {
     fun encrypt(byteArray: ByteArray): Single<ByteArray> {
         return Single.just(byteArray)
                 .map { gzip.gzip(it) }
-                .zipWith(keyProvider.publicKey, BiFunction<ByteArray, PublicKey, E2EEncryption.Encrypted> { bytes, pubKey->
+                .zipWith(keyProvider.publicKey, BiFunction<ByteArray, PublicKey, E2EEncryption.Encrypted> { bytes, pubKey ->
                     encryptor.encrypt(pubKey, bytes)
                 })
                 .map { GSON.toJson(it) }
                 .map { base64.base64(it.toByteArray()).toByteArray() }
-                .doOnError{
-                    Timber.d(it,"file encryption")
+                .doOnError {
+                    Timber.d(it, "file encryption")
                 }
 
     }

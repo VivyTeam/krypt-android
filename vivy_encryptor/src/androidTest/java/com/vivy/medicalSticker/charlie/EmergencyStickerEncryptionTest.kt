@@ -10,9 +10,9 @@ import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.Assertions.assertThatThrownBy
 import org.junit.Before
 import org.junit.Test
-import java.util.Arrays
+import java.util.*
 
-class EmergencyStickerEncryptionTest{
+class EmergencyStickerEncryptionTest {
     val service = EmergencyStickerEncryption
 
     @Before
@@ -21,26 +21,26 @@ class EmergencyStickerEncryptionTest{
     }
 
     @Test
-    fun generateFingerprintSecretShouldDriveKeyFromScrypt(){
+    fun generateFingerprintSecretShouldDriveKeyFromScrypt() {
         val pin = "someRandomPin"
 
         val fingerprintSecret = service.getFingerprintSecret(pin)
 
         val generatedFingerprintSecret = MedStickerKeyGenerator.getGenSCryptKey(
-            pin.toByteArray(),
-            CHARLIE_STATIC_SALT.toByteArray(),
-            EmergencyStickerEncryption.CPU_COST,
-            EmergencyStickerEncryption.MEMORY_COST,
-            EmergencyStickerEncryption.PARALLELIZATION_PARAM,
-            HASH_LENGTH
+                pin.toByteArray(),
+                CHARLIE_STATIC_SALT.toByteArray(),
+                EmergencyStickerEncryption.CPU_COST,
+                EmergencyStickerEncryption.MEMORY_COST,
+                EmergencyStickerEncryption.PARALLELIZATION_PARAM,
+                HASH_LENGTH
         ).asFingerprint()
 
         assertThat(fingerprintSecret).isEqualTo(generatedFingerprintSecret)
-            .withFailMessage("generated key should be exactly as scrypt key")
+                .withFailMessage("generated key should be exactly as scrypt key")
     }
 
     @Test
-    fun generatePinFingerprintShouldDriveKeyFromScrypt(){
+    fun generatePinFingerprintShouldDriveKeyFromScrypt() {
         val pin = "someRandomPin"
         val backendSecret = "someRandomBackendSecret"
         val secondSalt = "someRandomSecondSalt"
@@ -49,21 +49,21 @@ class EmergencyStickerEncryptionTest{
 
         val finalPin = pin + backendSecret
         val generatedPinFingerprint = MedStickerKeyGenerator.getGenSCryptKey(
-            finalPin.toByteArray(),
-            secondSalt.toByteArray(),
-            EmergencyStickerEncryption.CPU_COST,
-            EmergencyStickerEncryption.MEMORY_COST,
-            EmergencyStickerEncryption.PARALLELIZATION_PARAM,
-            HASH_LENGTH
+                finalPin.toByteArray(),
+                secondSalt.toByteArray(),
+                EmergencyStickerEncryption.CPU_COST,
+                EmergencyStickerEncryption.MEMORY_COST,
+                EmergencyStickerEncryption.PARALLELIZATION_PARAM,
+                HASH_LENGTH
         )
 
         assertThat(Arrays.equals(pinFingerprint.key, generatedPinFingerprint.copyOfRange(0, HASH_LENGTH / 2)))
-            .withFailMessage("generated key should be exactly as scrypt key")
-            .isTrue()
+                .withFailMessage("generated key should be exactly as scrypt key")
+                .isTrue()
 
         assertThat(pinFingerprint.fingerprintFile)
-            .withFailMessage("generated key should be exactly as scrypt key")
-            .isEqualTo(generatedPinFingerprint.copyOfRange(HASH_LENGTH / 2, HASH_LENGTH).asFingerprint())
+                .withFailMessage("generated key should be exactly as scrypt key")
+                .isEqualTo(generatedPinFingerprint.copyOfRange(HASH_LENGTH / 2, HASH_LENGTH).asFingerprint())
     }
 
     @Test
@@ -76,12 +76,12 @@ class EmergencyStickerEncryptionTest{
         val encryptedData = service.encrypt(pin, backendSecret, secondSalt, getRandomAesIv(), secret.toByteArray())
 
         assertThat(Arrays.equals(encryptedData.data, secret.toByteArray()))
-            .isFalse()
+                .isFalse()
 
         val decrypted = service.decrypt(pin, backendSecret, secondSalt, encryptedData.attr.iv, encryptedData.data)
 
         assertThat(String(decrypted))
-            .isEqualTo(secret)
+                .isEqualTo(secret)
     }
 
     @Test
@@ -96,15 +96,15 @@ class EmergencyStickerEncryptionTest{
         val encryptedData = service.encrypt(pin, backendSecret, secondSalt, secret.toByteArray(), getRandomAesIv())
 
         assertThatThrownBy { service.decrypt("wrongPin", backendSecret, secondSalt, encryptedData.attr.iv, encryptedData.data) }
-            .isInstanceOf(DecryptionFailed::class.java)
-            .hasNoCause()
+                .isInstanceOf(DecryptionFailed::class.java)
+                .hasNoCause()
     }
 
     private fun getRandomAesIv(): ByteArray {
         return SecureRandomGenerator().bytes(EmergencyStickerEncryption.AES_IV_LENGTH)
     }
 
-    private fun ByteArray.asFingerprint() : String {
+    private fun ByteArray.asFingerprint(): String {
         return "${MedStickerCipherAttr.CHARLIE}:" + this.joinToString("") {
             java.lang.String.format("%02x", it)
         }

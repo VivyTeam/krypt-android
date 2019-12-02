@@ -8,58 +8,58 @@ import polanski.option.Option
 
 interface EncryptedSharedPreferences {
     fun update(
-        key: String,
-        value: String,
-        user: String
+            key: String,
+            value: String,
+            user: String
     ): Observable<String>
 
     fun update(
-        key: String,
-        value: String
+            key: String,
+            value: String
     ): Observable<String>
 
     fun <J> update(
-        key: String,
-        value: J
+            key: String,
+            value: J
     ): Observable<String>
 
     fun <J> update(
-        key: String,
-        value: J,
-        user: String
+            key: String,
+            value: J,
+            user: String
     ): Observable<String>
 
     fun delete(
-        key: String,
-        user: String
+            key: String,
+            user: String
     ): Completable
 
     fun delete(
-        key: String
+            key: String
     ): Completable
 
     fun get(
-        key: String,
-        user: String
+            key: String,
+            user: String
     ): Single<Optional<String>>
 
     fun get(
-        key: String
+            key: String
     ): Single<Optional<String>>
 
 
     fun <J> get(
-        key: String,
-        clazz: Class<J>
+            key: String,
+            clazz: Class<J>
     ): Single<Option<J>>
 
 
     fun isEntryAvailable(
-        key: String,
-        user: String
+            key: String,
+            user: String
     ): Single<Boolean>
 
     fun isEntryAvailable(
-        key: String
+            key: String
     ): Single<Boolean>
 }

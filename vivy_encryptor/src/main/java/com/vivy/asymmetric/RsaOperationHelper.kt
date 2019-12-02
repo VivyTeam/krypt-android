@@ -3,7 +3,6 @@ package com.vivy.asymmetric
 import android.os.Build
 import java.io.ByteArrayInputStream
 import java.io.ByteArrayOutputStream
-import java.util.concurrent.Callable
 import javax.crypto.Cipher
 
 object RsaOperationHelper {
@@ -14,8 +13,8 @@ object RsaOperationHelper {
      * this parameter can be used to make sure an appropriate block size will be used in this method.
      */
     internal fun rsaOperation(
-        cipherProvider: ()->Cipher,
-        inputBytes: ByteArray
+            cipherProvider: () -> Cipher,
+            inputBytes: ByteArray
     ): ByteArray {
         // if the cipher is initialized with android key, blocksize is 0, so we need to make a guess
         // so far, this 0 is only happening if it's initialized with android key for decryption
@@ -48,9 +47,9 @@ object RsaOperationHelper {
     }
 
     private fun performCipher(
-        inputBytes: ByteArray,
-        cipherBlockSize: Int,
-        cipher: Cipher
+            inputBytes: ByteArray,
+            cipherBlockSize: Int,
+            cipher: Cipher
     ): ByteArray {
         val buffer = ByteArray(cipherBlockSize)
         val inStream = ByteArrayInputStream(inputBytes)

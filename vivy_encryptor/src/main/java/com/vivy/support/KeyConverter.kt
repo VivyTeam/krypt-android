@@ -32,6 +32,7 @@ class KeyConverter {
     fun toPem(rsaPublicKey: RSAPublicKey): String {
         return toPem(rsaPublicKey.encoded, "PUBLIC KEY")
     }
+
     fun toPem(rsaPublicKey: ECPublicKey): String {
         return toPem(rsaPublicKey.encoded, "PUBLIC KEY")
     }
@@ -92,6 +93,7 @@ class KeyConverter {
         val pemObject = reader.readPemObject()
         return EllipticCurves.getEcPublicKey(pemObject.content)
     }
+
     /*
     https://stackoverflow.com/a/41953072
     https://gist.github.com/markscottwright/4bd563fa91e9a72bf1ce12a0ff6567aa#gistcomment-2657458

@@ -13,10 +13,10 @@ class MedStickerEncryptionContractTest {
         val keyAttr = service.deriveKey("7i6XA2zz", "qmHuG263", MedStickerCipherAttr.ADAM)
 
         assertThat(encryptionBase64.base64(keyAttr.key))
-            .isEqualTo("Pivil9wBlqECOP8qulkJnHFnIiIwSffQt4rXo27X4Uk=")
+                .isEqualTo("Pivil9wBlqECOP8qulkJnHFnIiIwSffQt4rXo27X4Uk=")
 
         assertThat(encryptionBase64.base64(keyAttr.iv))
-            .isEqualTo("gi44bZGuBBdLpMISpeppWQ==")
+                .isEqualTo("gi44bZGuBBdLpMISpeppWQ==")
 
     }
 
@@ -25,10 +25,10 @@ class MedStickerEncryptionContractTest {
         val keyAttr = service.deriveKey("7i6XA2zz", "qmHuG263", MedStickerCipherAttr.BRITNEY)
 
         assertThat(encryptionBase64.base64(keyAttr.key))
-            .isEqualTo("1v6YGdN6BW2AR1uEylOmjSwKu/kUr5qNYR42X0Che3U=")
+                .isEqualTo("1v6YGdN6BW2AR1uEylOmjSwKu/kUr5qNYR42X0Che3U=")
 
         assertThat(encryptionBase64.base64(keyAttr.iv))
-            .isEqualTo("aoiywBzTwYxzKQz45UxWaQ==")
+                .isEqualTo("aoiywBzTwYxzKQz45UxWaQ==")
 
     }
 
@@ -37,7 +37,7 @@ class MedStickerEncryptionContractTest {
         val encrypted = service.encrypt("7i6XA2zz", "qmHuG263", "A Healthier Life is a Happier Life".toByteArray(), MedStickerCipherAttr.ADAM)
 
         assertThat(encryptionBase64.base64(encrypted.data))
-            .isEqualTo("rIfjcSAsEh/so+5+ijho97FmIRH36LCCkD/a0V0HWsmw01SEpxoYrQjp5Il5IITw")
+                .isEqualTo("rIfjcSAsEh/so+5+ijho97FmIRH36LCCkD/a0V0HWsmw01SEpxoYrQjp5Il5IITw")
 
     }
 
@@ -49,7 +49,7 @@ class MedStickerEncryptionContractTest {
         val encrypted = service.encrypt(code = code, pin = pin, data = "A Healthier Life is a Happier Life".toByteArray(), version = MedStickerCipherAttr.BRITNEY).data
 
         assertThat(encryptionBase64.base64(encrypted))
-            .isEqualTo("1EkGWJAKP0BG2CAstCFcq8ysbOEvYwruJrrJUBRVGQMe8590wfdKge/jfKcLwEjFg7Q=")
+                .isEqualTo("1EkGWJAKP0BG2CAstCFcq8ysbOEvYwruJrrJUBRVGQMe8590wfdKge/jfKcLwEjFg7Q=")
     }
 
 
@@ -60,13 +60,13 @@ class MedStickerEncryptionContractTest {
         val iv = encryptionBase64.debase64("aoiywBzTwYxzKQz45UxWaQ==")
 
         val encrypted = encryptionBase64.debase64(
-            "1EkGWJAKP0BG2CAstCFcq8ysbOEvYwruJrrJUBRVGQMe8590wfdKge/jfKcLwEjFg7Q="
+                "1EkGWJAKP0BG2CAstCFcq8ysbOEvYwruJrrJUBRVGQMe8590wfdKge/jfKcLwEjFg7Q="
         )
 
         val decrypted = service.decrypt(MedStickerCipherAttr(key, iv, MedStickerCipherAttr.BRITNEY), encrypted)
 
         assertThat(String(decrypted))
-            .isEqualTo("A Healthier Life is a Happier Life")
+                .isEqualTo("A Healthier Life is a Happier Life")
 
     }
 
@@ -76,13 +76,13 @@ class MedStickerEncryptionContractTest {
         val iv = encryptionBase64.debase64("gi44bZGuBBdLpMISpeppWQ==")
 
         val encrypted = encryptionBase64.debase64(
-            "rIfjcSAsEh/so+5+ijho97FmIRH36LCCkD/a0V0HWsmw01SEpxoYrQjp5Il5IITw"
+                "rIfjcSAsEh/so+5+ijho97FmIRH36LCCkD/a0V0HWsmw01SEpxoYrQjp5Il5IITw"
         )
 
         val decrypted = service.decrypt(MedStickerCipherAttr(key, iv, MedStickerCipherAttr.ADAM), encrypted)
 
         assertThat(String(decrypted))
-            .isEqualTo("A Healthier Life is a Happier Life")
+                .isEqualTo("A Healthier Life is a Happier Life")
 
     }
 

@@ -74,7 +74,7 @@ class EHREncryptionTest {
         assertThatThrownBy {
             service.decrypt(secondKeyPair.private, encrypted)
         }.isInstanceOf(DecryptionFailed::class.java)
-            .hasNoCause()
+                .hasNoCause()
     }
 
     @Test
@@ -89,8 +89,8 @@ class EHREncryptionTest {
         assertThatThrownBy {
             service.decrypt(secondKeyPair.private, encrypted)
         }.isInstanceOf(DecryptionFailed::class.java)
-            .hasCauseExactlyInstanceOf(IllegalStateException::class.java)
-            .hasMessageContaining("RSA operation failed")
+                .hasCauseExactlyInstanceOf(IllegalStateException::class.java)
+                .hasMessageContaining("RSA operation failed")
 
     }
 

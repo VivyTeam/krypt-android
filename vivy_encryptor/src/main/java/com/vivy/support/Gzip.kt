@@ -4,7 +4,6 @@ import com.google.common.io.ByteStreams
 import java.io.ByteArrayInputStream
 import java.io.ByteArrayOutputStream
 import java.io.IOException
-import java.io.InputStreamReader
 import java.util.zip.GZIPInputStream
 import java.util.zip.GZIPOutputStream
 
@@ -16,11 +15,11 @@ class Gzip {
         try {
 
             GZIPOutputStream(outputStream)
-                .use {
+                    .use {
 
-                    gzipOutputStream ->
-                    ByteStreams.copy(ByteArrayInputStream(data), gzipOutputStream)
-                }
+                        gzipOutputStream ->
+                        ByteStreams.copy(ByteArrayInputStream(data), gzipOutputStream)
+                    }
         } catch (ioe: IOException) {
             throw IllegalStateException("Failed to gzip data", ioe)
         }

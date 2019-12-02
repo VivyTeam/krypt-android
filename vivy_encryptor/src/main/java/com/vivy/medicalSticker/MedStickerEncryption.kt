@@ -2,7 +2,6 @@ package com.vivy.medicalSticker
 
 import com.vivy.e2e.DecryptionFailed
 import com.vivy.e2e.EncryptionFailed
-import com.vivy.support.Gzip
 import com.vivy.symmetric.AesCbcPkcs7
 import com.vivy.symmetric.AesGcmNoPadding
 
@@ -20,23 +19,23 @@ object MedStickerEncryption {
 
     private val signer = MedStickerSigner
     fun encrypt(
-        code: String,
-        pin: String,
-        data: ByteArray
+            code: String,
+            pin: String,
+            data: ByteArray
     ): EncryptedMedSticker = MedStickerEncryption.encrypt(code, pin, data, MedStickerCipherAttr.BRITNEY)
 
     internal fun encrypt(
-        code: String,
-        pin: String,
-        data: ByteArray,
-        version: String
+            code: String,
+            pin: String,
+            data: ByteArray,
+            version: String
     ): EncryptedMedSticker {
         val medKey = deriveKey(code, pin, version)
         try {
             val encryptedData = when (version) {
                 MedStickerCipherAttr.BRITNEY -> gcmNoPadding.encrypt(data, medKey.key, medKey.iv)
-                MedStickerCipherAttr.ADAM -> aesCbcPkcs7.encrypt(data, medKey.key, medKey.iv)
-                else -> throw UnsupportedOperationException("unsupported version used")
+                MedStickerCipherAttr.ADAM    -> aesCbcPkcs7.encrypt(data, medKey.key, medKey.iv)
+                else                         -> throw UnsupportedOperationException("unsupported version used")
             }
             return EncryptedMedSticker(encryptedData, medKey)
         } catch (e: Exception) {
@@ -45,13 +44,13 @@ object MedStickerEncryption {
     }
 
     fun decrypt(
-        attr: MedStickerCipherAttr,
-        encryptedData: ByteArray
+            attr: MedStickerCipherAttr,
+            encryptedData: ByteArray
     ): ByteArray {
         try {
             return when (attr.version) {
                 MedStickerCipherAttr.BRITNEY -> gcmNoPadding.decrypt(encryptedData, attr.key, attr.iv)
-                else -> aesCbcPkcs7.decrypt(encryptedData, attr.key, attr.iv)
+                else                         -> aesCbcPkcs7.decrypt(encryptedData, attr.key, attr.iv)
             }
 
         } catch (e: Exception) {
@@ -60,9 +59,9 @@ object MedStickerEncryption {
     }
 
     fun deriveKey(
-        code: String,
-        pin: String,
-        version: String
+            code: String,
+            pin: String,
+            version: String
     ): MedStickerCipherAttr {
 
         val key = generateKey(code, pin, version)
@@ -73,60 +72,60 @@ object MedStickerEncryption {
     }
 
     internal fun generateIV(
-        key: ByteArray,
-        pin: String,
-        version: String
+            key: ByteArray,
+            pin: String,
+            version: String
     ): ByteArray {
         return MedStickerKeyGenerator.getGenSCryptKey(
-            key,
-            pin.toByteArray(),
-            CPU_COST,
-            getMemoryCost(version),
-            PARALLELIZATION_PARAM,
-            DKLENFORIV
+                key,
+                pin.toByteArray(),
+                CPU_COST,
+                getMemoryCost(version),
+                PARALLELIZATION_PARAM,
+                DKLENFORIV
         )
     }
 
     internal fun getMemoryCost(version: String): Int {
         return when (version) {
             MedStickerCipherAttr.BRITNEY -> MEMORY_COST_BRITNEY
-            else -> MEMORY_COST_ADAM
+            else                         -> MEMORY_COST_ADAM
         }
     }
 
     internal fun generateKey(
-        code: String,
-        pin: String,
-        version: String
+            code: String,
+            pin: String,
+            version: String
     ): ByteArray {
         return MedStickerKeyGenerator.getGenSCryptKey(
-            pin.toByteArray(),
-            code.toByteArray(),
-            CPU_COST,
-            getMemoryCost(version),
-            PARALLELIZATION_PARAM,
-            DKLENFORSKEY
+                pin.toByteArray(),
+                code.toByteArray(),
+                CPU_COST,
+                getMemoryCost(version),
+                PARALLELIZATION_PARAM,
+                DKLENFORSKEY
         )
     }
 
 
     fun decrypt(
-        pin: String,
-        code: String,
-        encryptedData: ByteArray,
-        version: String
+            pin: String,
+            code: String,
+            encryptedData: ByteArray,
+            version: String
     ): ByteArray {
         val medKey = deriveKey(code, pin, version)
         try {
-            return MedStickerEncryption.decrypt(medKey,encryptedData)
+            return MedStickerEncryption.decrypt(medKey, encryptedData)
         } catch (e: Exception) {
             throw DecryptionFailed(if (debug) e else null)
         }
     }
 
     fun accessSignature(
-        attr: MedStickerCipherAttr,
-        salt: ByteArray
+            attr: MedStickerCipherAttr,
+            salt: ByteArray
     ) = signer.accessSignature(attr, salt)
 
     infix fun setDebugTo(debug: Boolean) {

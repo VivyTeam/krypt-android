@@ -40,22 +40,22 @@ class EncryptSampleActivity : AppCompatActivity() {
         setContentView(R.layout.activity_encryptor)
         countingIdlingResource.increment()
         compositeDisposable.add(
-            Observable.fromCallable {
+                Observable.fromCallable {
 
-                val keyGen = KeyPairGenerator.getInstance("RSA")
-                keyGen.initialize(1024)
-                return@fromCallable keyGen.generateKeyPair()//generating RSA keypair
+                    val keyGen = KeyPairGenerator.getInstance("RSA")
+                    keyGen.initialize(1024)
+                    return@fromCallable keyGen.generateKeyPair()//generating RSA keypair
 
-            }.subscribeOn(Schedulers.computation())
-                .subscribeOn(AndroidSchedulers.mainThread())
-                .subscribe {
+                }.subscribeOn(Schedulers.computation())
+                        .subscribeOn(AndroidSchedulers.mainThread())
+                        .subscribe {
 
-                    this.testKey = it
+                            this.testKey = it
 
-                    initialiseUI()
+                            initialiseUI()
 
-                    countingIdlingResource.decrement()
-                }
+                            countingIdlingResource.decrement()
+                        }
         )
     }
 
@@ -75,64 +75,64 @@ class EncryptSampleActivity : AppCompatActivity() {
                 encrypted?.let {
                     countingIdlingResource.increment()
                     Observable
-                        .just(it)
-                        .map {
+                            .just(it)
+                            .map {
 
-                            decrypt(it, testKey!!.private)
+                                decrypt(it, testKey!!.private)
 
-                        }
-                        .subscribeOn(Schedulers.computation())
-                        .doOnSubscribe { compositeDisposable.add(it) }
-                        .observeOn(AndroidSchedulers.mainThread()).subscribe {
-                            decryptedText.text = "Decrypted Text: ${String(it)}"
-                            countingIdlingResource.decrement()
-                        }
+                            }
+                            .subscribeOn(Schedulers.computation())
+                            .doOnSubscribe { compositeDisposable.add(it) }
+                            .observeOn(AndroidSchedulers.mainThread()).subscribe {
+                                decryptedText.text = "Decrypted Text: ${String(it)}"
+                                countingIdlingResource.decrement()
+                            }
                 }
             }
         }
     }
 
     private fun decrypt(
-        encryptedPayload: E2EEncryption.Encrypted,
-        privateKey: PrivateKey
+            encryptedPayload: E2EEncryption.Encrypted,
+            privateKey: PrivateKey
     ): ByteArray = gzip.gunzip(EHREncryption().decrypt(privateKey, encryptedPayload))
-         //decrypting
+    //decrypting
 
 
     @SuppressLint("CheckResult")
     private fun encryptAndPrint(
-        text: String,
-        publicKey: PublicKey
+            text: String,
+            publicKey: PublicKey
     ) {
         countingIdlingResource.increment()
 
         Observable.just(text.toByteArray())
 
-            .map { gzip.gzip(it) }
+                .map { gzip.gzip(it) }
 
-            .map { EHREncryption().encrypt(publicKey, it) }
+                .map { EHREncryption().encrypt(publicKey, it) }
 
-            .subscribeOn(Schedulers.computation())
-            .observeOn(AndroidSchedulers.mainThread())
-            .doOnSubscribe { compositeDisposable.add(it) }
-            .subscribe {
-                val output = StringBuilder()
-                output.appendln("Encrypted payload base64: ${Base64Encoder.base64(it.data)}\n")
-                output.appendln("payload cipher keys encrypted using RSA : ${it.cipher} \n")
+                .subscribeOn(Schedulers.computation())
+                .observeOn(AndroidSchedulers.mainThread())
+                .doOnSubscribe { compositeDisposable.add(it) }
+                .subscribe {
+                    val output = StringBuilder()
+                    output.appendln("Encrypted payload base64: ${Base64Encoder.base64(it.data)}\n")
+                    output.appendln("payload cipher keys encrypted using RSA : ${it.cipher} \n")
 
-                encryptedText.text = output
+                    encryptedText.text = output
 
-                hideKeyboardFrom(this, encryptedText)
+                    hideKeyboardFrom(this, encryptedText)
 
-                encrypted = it
+                    encrypted = it
 
-                countingIdlingResource.decrement()
-            }
+                    countingIdlingResource.decrement()
+                }
     }
 
     private fun hideKeyboardFrom(
-        context: Context,
-        view: View
+            context: Context,
+            view: View
     ) {
         val imm = context.getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
         imm.hideSoftInputFromWindow(view.windowToken, 0)

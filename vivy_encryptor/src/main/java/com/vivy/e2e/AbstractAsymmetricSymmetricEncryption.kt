@@ -11,8 +11,8 @@ import java.security.PrivateKey
 import java.security.PublicKey
 
 abstract class AbstractAsymmetricSymmetricEncryption(
-    val asymmetricEncryption: AsymmetricEncryption,
-    val symmetricEncryption: SymmetricEncryption
+        val asymmetricEncryption: AsymmetricEncryption,
+        val symmetricEncryption: SymmetricEncryption
 ) : E2EEncryption {
 
     private val base64Encoder = Base64Encoder
@@ -21,8 +21,8 @@ abstract class AbstractAsymmetricSymmetricEncryption(
     private val gson = GsonBuilder().disableHtmlEscaping().create()
 
     override fun encrypt(
-        publicKey: PublicKey,
-        plainData: ByteArray
+            publicKey: PublicKey,
+            plainData: ByteArray
     ): E2EEncryption.Encrypted {
 
         val key = secureRandomGenerator.bytes(32)
@@ -31,18 +31,18 @@ abstract class AbstractAsymmetricSymmetricEncryption(
             val aesEncryptedBytes = symmetricEncryption.encrypt(plainData, key, iv)
 
             val cipherKeysJson = gson.toJson(
-                mapOf<String, String>(
-                    "base64EncodedKey" to base64Encoder.base64(key),
-                    "base64EncodedIV" to base64Encoder.base64(iv)
-                )
+                    mapOf<String, String>(
+                            "base64EncodedKey" to base64Encoder.base64(key),
+                            "base64EncodedIV" to base64Encoder.base64(iv)
+                    )
             )
 
             val encryptedCipherKeys = asymmetricEncryption.encryptText(publicKey, cipherKeysJson)
 
             return E2EEncryption.Encrypted(
-                aesEncryptedBytes,
-                encryptedCipherKeys,
-                version
+                    aesEncryptedBytes,
+                    encryptedCipherKeys,
+                    version
             )
         } catch (e: Throwable) {
             throw EncryptionFailed(if (debugMode) e else null)
@@ -50,8 +50,8 @@ abstract class AbstractAsymmetricSymmetricEncryption(
     }
 
     override fun decrypt(
-        privateKey: PrivateKey,
-        encrypted: E2EEncryption.Encrypted
+            privateKey: PrivateKey,
+            encrypted: E2EEncryption.Encrypted
     ): ByteArray {
         try {
             val encryptedCipherKeys = encrypted.cipher
@@ -61,9 +61,9 @@ abstract class AbstractAsymmetricSymmetricEncryption(
 
 
             return symmetricEncryption.decrypt(
-                encrypted.data,
-                base64Encoder.debase64(cipherKeysMap["base64EncodedKey"].toString()),
-                base64Encoder.debase64(cipherKeysMap["base64EncodedIV"].toString())
+                    encrypted.data,
+                    base64Encoder.debase64(cipherKeysMap["base64EncodedKey"].toString()),
+                    base64Encoder.debase64(cipherKeysMap["base64EncodedIV"].toString())
             )
         } catch (e: Throwable) {
             throw DecryptionFailed(if (debugMode) e else null)
