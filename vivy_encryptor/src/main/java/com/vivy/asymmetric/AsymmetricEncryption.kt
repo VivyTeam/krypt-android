@@ -6,12 +6,12 @@ import java.security.PublicKey
 interface AsymmetricEncryption {
 
     fun encryptText(
-        publicKey: PublicKey,
-        decryptedText: String
+            publicKey: PublicKey,
+            decryptedText: String
     ): String
 
     fun decryptText(
-        privateKey: PrivateKey,
-        base64AndEncryptedContent: String
+            privateKey: PrivateKey,
+            base64AndEncryptedContent: String
     ): String
 }

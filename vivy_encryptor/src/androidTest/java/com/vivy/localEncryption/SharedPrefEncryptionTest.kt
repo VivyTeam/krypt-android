@@ -10,7 +10,6 @@ import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Test
-import java.security.KeyPair
 import java.security.KeyPairGenerator
 import java.security.PrivateKey
 import java.security.PublicKey
@@ -55,14 +54,14 @@ class SharedPrefEncryptionTest {
         val keyProvider = generateRandomTestKey()
 
         encryptedSharedPrefUtil =
-            EncryptedSharedPrefUtil(sharedPreferences, keyProvider, userIdentifier)
+                EncryptedSharedPrefUtil(sharedPreferences, keyProvider, userIdentifier)
 
         val encrypted = "secret message"
 
         val encryptedMessage = encryptedSharedPrefUtil.encrypt(encrypted)
-            .blockingFirst()
+                .blockingFirst()
         val option = encryptedSharedPrefUtil.decrypt(encryptedMessage)
-            .blockingGet()
+                .blockingGet()
         assertTrue(option.isPresent)
         val decryptedMessage = option.or("")
         assertEquals(encrypted, decryptedMessage)
@@ -73,10 +72,10 @@ class SharedPrefEncryptionTest {
     fun testGetForNonExistentValue() {
 
         encryptedSharedPrefUtil =
-            EncryptedSharedPrefUtil(sharedPreferences, generateRandomTestKey(), userIdentifier)
+                EncryptedSharedPrefUtil(sharedPreferences, generateRandomTestKey(), userIdentifier)
 
         val option =
-            encryptedSharedPrefUtil.get("KEY_TEST_FOR_KEY_THAT_DOESN_T_EXIST").blockingGet()
+                encryptedSharedPrefUtil.get("KEY_TEST_FOR_KEY_THAT_DOESN_T_EXIST").blockingGet()
 
         assertFalse(option.isPresent)
     }
@@ -85,12 +84,12 @@ class SharedPrefEncryptionTest {
     fun testUpdateExistingValue() {
 
         encryptedSharedPrefUtil =
-            EncryptedSharedPrefUtil(sharedPreferences, generateRandomTestKey(), userIdentifier)
+                EncryptedSharedPrefUtil(sharedPreferences, generateRandomTestKey(), userIdentifier)
 
         val expectedResult = "expected test result!"
 
         encryptedSharedPrefUtil.update("KEY_TEST_FOR_KEY_THAT_EXISTS", expectedResult)
-            .blockingFirst()
+                .blockingFirst()
 
         val option = encryptedSharedPrefUtil.get("KEY_TEST_FOR_KEY_THAT_EXISTS").blockingGet()
 
@@ -102,7 +101,7 @@ class SharedPrefEncryptionTest {
     fun testDeleteExistingValue() {
 
         encryptedSharedPrefUtil =
-            EncryptedSharedPrefUtil(sharedPreferences, generateRandomTestKey(), userIdentifier)
+                EncryptedSharedPrefUtil(sharedPreferences, generateRandomTestKey(), userIdentifier)
 
         val expectedResult = "expected test result!"
         val key = "KEY_TEST_FOR_KEY_THAT_EXISTS"
@@ -123,11 +122,11 @@ class SharedPrefEncryptionTest {
     fun testGetForNonExistentValuePassingId() {
 
         encryptedSharedPrefUtil =
-            EncryptedSharedPrefUtil(sharedPreferences, generateRandomTestKey(), userIdentifier)
+                EncryptedSharedPrefUtil(sharedPreferences, generateRandomTestKey(), userIdentifier)
 
         val option = encryptedSharedPrefUtil.get(
-            "KEY_TEST_FOR_KEY_THAT_DOESN_T_EXIST",
-            userIdentifier.getId()
+                "KEY_TEST_FOR_KEY_THAT_DOESN_T_EXIST",
+                userIdentifier.getId()
         ).blockingGet()
 
         assertFalse(option.isPresent)
@@ -137,16 +136,16 @@ class SharedPrefEncryptionTest {
     fun testUpdateExistingValuePassingId() {
 
         encryptedSharedPrefUtil =
-            EncryptedSharedPrefUtil(sharedPreferences, generateRandomTestKey(), userIdentifier)
+                EncryptedSharedPrefUtil(sharedPreferences, generateRandomTestKey(), userIdentifier)
 
         val expectedResult = "expected test result!"
 
         encryptedSharedPrefUtil.update("KEY_TEST_FOR_KEY_THAT_EXISTS", expectedResult)
-            .blockingFirst()
+                .blockingFirst()
 
         val option =
-            encryptedSharedPrefUtil.get("KEY_TEST_FOR_KEY_THAT_EXISTS", userIdentifier.getId())
-                .blockingGet()
+                encryptedSharedPrefUtil.get("KEY_TEST_FOR_KEY_THAT_EXISTS", userIdentifier.getId())
+                        .blockingGet()
 
         assertTrue(option.isPresent)
         assertEquals(expectedResult, option.get())
@@ -156,7 +155,7 @@ class SharedPrefEncryptionTest {
     fun testDeleteExistingValuePassingId() {
 
         encryptedSharedPrefUtil =
-            EncryptedSharedPrefUtil(sharedPreferences, generateRandomTestKey(), userIdentifier)
+                EncryptedSharedPrefUtil(sharedPreferences, generateRandomTestKey(), userIdentifier)
 
         val expectedResult = "expected test result!"
         val key = "KEY_TEST_FOR_KEY_THAT_EXISTS"
@@ -175,33 +174,32 @@ class SharedPrefEncryptionTest {
     @Test
     fun testAvailabilityCheck() {
         encryptedSharedPrefUtil =
-            EncryptedSharedPrefUtil(sharedPreferences, generateRandomTestKey(), userIdentifier)
+                EncryptedSharedPrefUtil(sharedPreferences, generateRandomTestKey(), userIdentifier)
         val keyForExistingValue = "KEY_FOR_EXISTING_VALUE"
         val keyForNonExistingValue = "Key_FOR_MISSING_VALUE"
         val value = "VALUE"
         encryptedSharedPrefUtil.update(keyForExistingValue, value).blockingFirst()
         val returnedForExistingValue =
-            encryptedSharedPrefUtil.isEntryAvailable(keyForExistingValue).blockingGet()
+                encryptedSharedPrefUtil.isEntryAvailable(keyForExistingValue).blockingGet()
         val returnedForNonExistingValue =
-            encryptedSharedPrefUtil.isEntryAvailable(keyForNonExistingValue).blockingGet()
+                encryptedSharedPrefUtil.isEntryAvailable(keyForNonExistingValue).blockingGet()
         assertTrue(returnedForExistingValue)
         assertFalse(returnedForNonExistingValue)
     }
 
-    @Test fun testGetWithObjects(){
+    @Test
+    fun testGetWithObjects() {
         encryptedSharedPrefUtil =
-            EncryptedSharedPrefUtil(sharedPreferences, generateRandomTestKey(), userIdentifier)
+                EncryptedSharedPrefUtil(sharedPreferences, generateRandomTestKey(), userIdentifier)
         val keyForObject = "KEY_FOR_OBJECT"
         val objectToSave = TestClass("TestString", 123)
-        encryptedSharedPrefUtil.update(keyForObject,objectToSave).blockingFirst()
-        val retrievedValue = encryptedSharedPrefUtil.get(keyForObject,TestClass::class.java).blockingGet().orDefault { null }
-        assertEquals(objectToSave,retrievedValue)
+        encryptedSharedPrefUtil.update(keyForObject, objectToSave).blockingFirst()
+        val retrievedValue = encryptedSharedPrefUtil.get(keyForObject, TestClass::class.java).blockingGet().orDefault { null }
+        assertEquals(objectToSave, retrievedValue)
     }
 
 
-
-
-    data class TestClass(val stringProperty:String, val IntegerProperty:Int)
+    data class TestClass(val stringProperty: String, val IntegerProperty: Int)
 
 
 }

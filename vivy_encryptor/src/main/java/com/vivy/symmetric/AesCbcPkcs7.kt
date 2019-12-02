@@ -25,9 +25,9 @@ class AesCbcPkcs7 : SymmetricEncryption {
         }
 
     override fun encrypt(
-        data: ByteArray,
-        key: ByteArray,
-        iv: ByteArray
+            data: ByteArray,
+            key: ByteArray,
+            iv: ByteArray
     ): ByteArray {
         val ivSpec = IvParameterSpec(iv)
         val skeySpec = SecretKeySpec(key, "AES")
@@ -52,9 +52,9 @@ class AesCbcPkcs7 : SymmetricEncryption {
     }
 
     override fun decrypt(
-        encryptedData: ByteArray,
-        key: ByteArray,
-        iv: ByteArray
+            encryptedData: ByteArray,
+            key: ByteArray,
+            iv: ByteArray
     ): ByteArray {
         val ivSpec = IvParameterSpec(iv)
         val skeySpec = SecretKeySpec(key, "AES")

@@ -1,42 +1,42 @@
 allprojects {
-  repositories {
-    google()
-    jcenter()
-    maven { url 'https://maven.google.com' }
-    maven { url "https://jitpack.io" }
-  }
+    repositories {
+        google()
+        jcenter()
+        maven { url 'https://maven.google.com' }
+        maven { url "https://jitpack.io" }
+    }
 }
 
 ext {
-  timber = '4.7.1'
-  gson = '2.8.5'
-  rxJava2 = '2.2.0'
-  options = '1.3.0'
-  guava = '26.0-android'
-  elliptic = '1.2.2'
-  bouncyCastle = '1.60'
-  testRunner = '1.0.2'
-  espresso = '3.1.0-alpha1'
-  androidX = '1.1.0'
-  rxAndroid = '2.0.2'
-  assertJ = '3.11.1'
+    timber = '4.7.1'
+    gson = '2.8.5'
+    rxJava2 = '2.2.0'
+    options = '1.3.0'
+    guava = '26.0-android'
+    elliptic = '1.2.2'
+    bouncyCastle = '1.60'
+    testRunner = '1.0.2'
+    espresso = '3.1.0-alpha1'
+    androidX = '1.1.0'
+    rxAndroid = '2.0.2'
+    assertJ = '3.11.1'
 
 
-  commonDependencies = [rxAndroid   : "io.reactivex.rxjava2:rxandroid:${rxAndroid}",
-                        timber      : "com.jakewharton.timber:timber:${timber}",
-                        gson        : "com.google.code.gson:gson:${gson}",
-                        rxJava2     : "io.reactivex.rxjava2:rxjava:${rxJava2}",
-                        options     : "com.github.tomaszpolanski:options:${options}",
-                        guava       : "com.google.guava:guava:$guava",
-                        bouncyCastle: "org.bouncycastle:bcpkix-jdk15on:${bouncyCastle}",
-                        elepticCurve: "com.google.crypto.tink:tink-android:${elliptic}",
-  ]
+    commonDependencies = [rxAndroid   : "io.reactivex.rxjava2:rxandroid:${rxAndroid}",
+                          timber      : "com.jakewharton.timber:timber:${timber}",
+                          gson        : "com.google.code.gson:gson:${gson}",
+                          rxJava2     : "io.reactivex.rxjava2:rxjava:${rxJava2}",
+                          options     : "com.github.tomaszpolanski:options:${options}",
+                          guava       : "com.google.guava:guava:$guava",
+                          bouncyCastle: "org.bouncycastle:bcpkix-jdk15on:${bouncyCastle}",
+                          elepticCurve: "com.google.crypto.tink:tink-android:${elliptic}",
+    ]
 
-  commonTestDependencies = [testRunner             : "androidx.test:runner:$androidX",
-                            testRules              : "androidx.test:rules:$androidX",
-                            espressoIdlingResources: "androidx.test.espresso:espresso-idling-resource:${espresso}",
-                            espresso               : "androidx.test.espresso:espresso-core:${espresso}",
-                            assertj                : "org.assertj:assertj-core:${assertJ}",
+    commonTestDependencies = [testRunner             : "androidx.test:runner:$androidX",
+                              testRules              : "androidx.test:rules:$androidX",
+                              espressoIdlingResources: "androidx.test.espresso:espresso-idling-resource:${espresso}",
+                              espresso               : "androidx.test.espresso:espresso-core:${espresso}",
+                              assertj                : "org.assertj:assertj-core:${assertJ}",
 
-  ]
+    ]
 }

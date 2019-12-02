@@ -25,9 +25,9 @@ class AesGcmNoPadding : SymmetricEncryption {
         }
 
     override fun encrypt(
-        data: ByteArray,
-        key: ByteArray,
-        iv: ByteArray
+            data: ByteArray,
+            key: ByteArray,
+            iv: ByteArray
     ): ByteArray {
         val gcmBitLength = iv.size * 8
         val ivSpec = GCMParameterSpec(gcmBitLength, iv)
@@ -53,9 +53,9 @@ class AesGcmNoPadding : SymmetricEncryption {
     }
 
     override fun decrypt(
-        encryptedData: ByteArray,
-        key: ByteArray,
-        iv: ByteArray
+            encryptedData: ByteArray,
+            key: ByteArray,
+            iv: ByteArray
     ): ByteArray {
         val gcmBitLength = iv.size * 8
         val ivSpec = GCMParameterSpec(gcmBitLength, iv)

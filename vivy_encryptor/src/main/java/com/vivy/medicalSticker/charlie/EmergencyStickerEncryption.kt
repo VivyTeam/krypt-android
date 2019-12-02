@@ -21,23 +21,23 @@ object EmergencyStickerEncryption {
     private val gcmNoPadding = AesGcmNoPadding()
 
     fun encrypt(
-        data: ByteArray,
-        key: ByteArray,
-        iv: ByteArray
-    ):ByteArray{
+            data: ByteArray,
+            key: ByteArray,
+            iv: ByteArray
+    ): ByteArray {
         try {
             return gcmNoPadding.encrypt(data, key, iv)
-        }catch (e: Exception) {
+        } catch (e: Exception) {
             throw EncryptionFailed(if (MedStickerEncryption.debug) e else null)
         }
     }
 
     fun encrypt(
-        pin: String,
-        secret: String,
-        salt: String,
-        iv: ByteArray,
-        data: ByteArray
+            pin: String,
+            secret: String,
+            salt: String,
+            iv: ByteArray,
+            data: ByteArray
     ): EncryptedEmergencySticker {
 
         val keyPairs = getKeyAndFingerprintFile(pin, secret, salt)
@@ -54,38 +54,38 @@ object EmergencyStickerEncryption {
      */
 
     internal fun getKeyAndFingerprintFile(
-        pin: String,
-        secret: String,
-        salt: String
-    ): EmergencyStickerKeyPairs{
+            pin: String,
+            secret: String,
+            salt: String
+    ): EmergencyStickerKeyPairs {
         val hash = getHash(pin + secret, salt)
         val key = hash.dropLast(HASH_LENGTH / 2).toByteArray()
         val fingerprintFile = hash.drop(HASH_LENGTH / 2).toByteArray().asFingerprint()
         return EmergencyStickerKeyPairs(key, fingerprintFile)
     }
 
-    fun getFingerprintSecret(pin: String): String{
+    fun getFingerprintSecret(pin: String): String {
         return getHash(pin, CHARLIE_STATIC_SALT).asFingerprint()
     }
 
     private fun getHash(
-        pin: String,
-        salt: String
-    ):ByteArray {
+            pin: String,
+            salt: String
+    ): ByteArray {
         return MedStickerKeyGenerator.getGenSCryptKey(
-            pin.toByteArray(),
-            salt.toByteArray(),
-            CPU_COST,
-            MEMORY_COST,
-            PARALLELIZATION_PARAM,
-            HASH_LENGTH
+                pin.toByteArray(),
+                salt.toByteArray(),
+                CPU_COST,
+                MEMORY_COST,
+                PARALLELIZATION_PARAM,
+                HASH_LENGTH
         )
     }
 
     fun decrypt(
-        encryptedData: ByteArray,
-        key: ByteArray,
-        iv: ByteArray
+            encryptedData: ByteArray,
+            key: ByteArray,
+            iv: ByteArray
     ): ByteArray {
         try {
             return gcmNoPadding.decrypt(encryptedData, key, iv)
@@ -95,11 +95,11 @@ object EmergencyStickerEncryption {
     }
 
     fun decrypt(
-        pin: String,
-        secret: String,
-        salt: String,
-        iv: ByteArray,
-        data: ByteArray
+            pin: String,
+            secret: String,
+            salt: String,
+            iv: ByteArray,
+            data: ByteArray
     ): ByteArray {
 
         val keyPairs = getKeyAndFingerprintFile(pin, secret, salt)
@@ -109,15 +109,15 @@ object EmergencyStickerEncryption {
 
 
     data class EmergencyStickerKeyPairs(
-        val key: ByteArray, // first half of fingerprint
-        val fingerprintFile: String // second half of fingerprint
+            val key: ByteArray, // first half of fingerprint
+            val fingerprintFile: String // second half of fingerprint
     )
 
     infix fun setDebugTo(debug: Boolean) {
         this.debug = debug
     }
 
-    private fun ByteArray.asFingerprint() : String {
+    private fun ByteArray.asFingerprint(): String {
         return "$CHARLIE:" + this.joinToString("") {
             java.lang.String.format("%02x", it)
         }

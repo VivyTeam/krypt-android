@@ -6,20 +6,20 @@ import java.io.ByteArrayOutputStream
 
 internal object MedStickerSigner {
 
-    fun accessSignature(medStickerCipherAttr: MedStickerCipherAttr,salt:ByteArray):String{
-        return "${medStickerCipherAttr.version}-sha256:${Base64Encoder.base64(signBytes(medStickerCipherAttr.key,medStickerCipherAttr.iv,salt))}"
+    fun accessSignature(medStickerCipherAttr: MedStickerCipherAttr, salt: ByteArray): String {
+        return "${medStickerCipherAttr.version}-sha256:${Base64Encoder.base64(signBytes(medStickerCipherAttr.key, medStickerCipherAttr.iv, salt))}"
     }
 
-    fun signBytes(key:ByteArray,iv:ByteArray,salt: ByteArray):ByteArray{
-         ByteArrayOutputStream()
-            .use {
-                it.write(key)
-                it.write(iv)
-                it.write(salt)
-                return Hashing.sha256()
-                    .hashBytes(it.toByteArray())
-                    .asBytes()
-            }
+    fun signBytes(key: ByteArray, iv: ByteArray, salt: ByteArray): ByteArray {
+        ByteArrayOutputStream()
+                .use {
+                    it.write(key)
+                    it.write(iv)
+                    it.write(salt)
+                    return Hashing.sha256()
+                            .hashBytes(it.toByteArray())
+                            .asBytes()
+                }
 
     }
 }

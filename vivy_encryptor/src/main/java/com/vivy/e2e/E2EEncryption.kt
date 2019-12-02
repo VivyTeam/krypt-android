@@ -9,19 +9,19 @@ interface E2EEncryption {
     val version: String
 
     fun encrypt(
-        publicKey: PublicKey,
-        plainData: ByteArray
+            publicKey: PublicKey,
+            plainData: ByteArray
     ): Encrypted
 
     fun decrypt(
-        privateKey: PrivateKey,
-        encrypted: Encrypted
+            privateKey: PrivateKey,
+            encrypted: Encrypted
     ): ByteArray
 
     data class Encrypted(
-        @SerializedName("data") var data: ByteArray,
-        @SerializedName("cipher") var cipher: String,
-        @SerializedName("version") var version: String
+            @SerializedName("data") var data: ByteArray,
+            @SerializedName("cipher") var cipher: String,
+            @SerializedName("version") var version: String
     )
 
 }

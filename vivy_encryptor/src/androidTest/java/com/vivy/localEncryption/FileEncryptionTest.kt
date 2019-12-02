@@ -7,11 +7,10 @@ import org.junit.Assert.assertNotEquals
 import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Test
-import java.security.KeyPairGenerator
 import java.security.PrivateKey
 import java.security.PublicKey
 import java.security.SecureRandom
-import java.util.Arrays
+import java.util.*
 
 class FileEncryptionTest {
     lateinit var fileEncryption: FileEncryption
@@ -47,7 +46,8 @@ class FileEncryptionTest {
 
     }
 
-    @Test fun fileCorrectlyDecryptedTest() {
+    @Test
+    fun fileCorrectlyDecryptedTest() {
 
         val random = SecureRandom()
         val bytes = ByteArray(1048576)//1mb

@@ -1,9 +1,8 @@
 package com.vivy.symmetric
 
 import com.vivy.support.SecureRandomGenerator
-import org.junit.Test
-
 import org.junit.Assert.assertEquals
+import org.junit.Test
 
 class AesCbcPkcs7Test {
 

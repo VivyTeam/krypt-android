@@ -1,5 +1,5 @@
 package com.vivy.localEncryption
 
-interface UserIdentifier{
+interface UserIdentifier {
     fun getId(): String
 }

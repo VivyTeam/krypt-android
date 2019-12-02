@@ -12,15 +12,15 @@ class EHREncryption : E2EEncryption {
         get() = rsaEcbOeapSha256AesGcmNoPadding.version
 
     override fun encrypt(
-        publicKey: PublicKey,
-        plainData: ByteArray
+            publicKey: PublicKey,
+            plainData: ByteArray
     ): E2EEncryption.Encrypted {
         return rsaEcbOeapSha256AesGcmNoPadding.encrypt(publicKey, plainData)
     }
 
     override fun decrypt(
-        privateKey: PrivateKey,
-        encrypted: E2EEncryption.Encrypted
+            privateKey: PrivateKey,
+            encrypted: E2EEncryption.Encrypted
     ): ByteArray {
         val version = encrypted.version
         return if (rsaEcbOeapSha256AesGcmNoPadding.version.equals(version, ignoreCase = true)) {
@@ -31,7 +31,7 @@ class EHREncryption : E2EEncryption {
     }
 
 
-    infix fun setDebugModeTo(debug:Boolean){
+    infix fun setDebugModeTo(debug: Boolean) {
         (this.rsaEcbOeapSha256AesGcmNoPadding as? AbstractAsymmetricSymmetricEncryption)?.setDebugModeTo(debug)
         (this.rsaEcbPkcs1AesCbcPkcs7 as? AbstractAsymmetricSymmetricEncryption)?.setDebugModeTo(debug)
     }
