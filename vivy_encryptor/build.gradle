@@ -21,24 +21,31 @@ android {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
+
         staging {
             initWith debug
             minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
+
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
+
+    kotlinOptions {
+        jvmTarget = "1.8"
+    }
+
     lintOptions {
         warning 'InvalidPackage'
     }
-
 }
 
 dependencies {
@@ -56,8 +63,5 @@ dependencies {
     androidTestImplementation commonTestDependencies.espresso
     androidTestImplementation commonTestDependencies.assertj
     testImplementation commonTestDependencies.assertj
-    api "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
-}
-repositories {
-    mavenCentral()
+    api "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
 }
