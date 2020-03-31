@@ -1,6 +1,47 @@
-<?xml version="1.0"?>
+<?xml version="1.0" ?>
 <SmellBaseline>
-    <Blacklist />
-    <Whitelist />
-    <!-- AUTO-GENERATED FILE. -->
+  <Blacklist></Blacklist>
+  <Whitelist>
+    <ID>FunctionNaming:KeyConverter.kt$KeyConverter$/* https://stackoverflow.com/a/41953072 https://gist.github.com/markscottwright/4bd563fa91e9a72bf1ce12a0ff6567aa#gistcomment-2657458 */ fun PKC1ToPKCS8PrivateKey(privateKeyString: String): PrivateKey</ID>
+    <ID>LongParameterList:MedStickerKeyGenerator.kt$MedStickerKeyGenerator$( pin: ByteArray, salt: ByteArray, cpuCost: Int = 16384, memoryCost: Int = 8, parallelizationParam: Int = 1, dkLen: Int = 32 )</ID>
+    <ID>MagicNumber:AbstractAsymmetricSymmetricEncryption.kt$AbstractAsymmetricSymmetricEncryption$16</ID>
+    <ID>MagicNumber:AbstractAsymmetricSymmetricEncryption.kt$AbstractAsymmetricSymmetricEncryption$32</ID>
+    <ID>MagicNumber:AesGcmNoPadding.kt$AesGcmNoPadding$8</ID>
+    <ID>MagicNumber:RsaOperationHelper.kt$RsaOperationHelper$501</ID>
+    <ID>MagicNumber:RsaOperationHelper.kt$RsaOperationHelper$512</ID>
+    <ID>MaxLineLength:FileEncryption.kt$FileEncryption$Single.just(String(byteArray)) .map { base64.debase64(it) } .map { String(it) } .map { GSON.fromJson(it, E2EEncryption.Encrypted::class.java) } .zipWith(keyProvider.privateKey, BiFunction&lt;E2EEncryption.Encrypted, PrivateKey, ByteArray&gt; { encrypted, privateKey -&gt; encryptor.decrypt(privateKey, encrypted) })</ID>
+    <ID>MaxLineLength:FileEncryption.kt$FileEncryption$Single.just(byteArray) .map { gzip.gzip(it) } .zipWith(keyProvider.publicKey, BiFunction&lt;ByteArray, PublicKey, E2EEncryption.Encrypted&gt; { bytes, pubKey -&gt; encryptor.encrypt(pubKey, bytes) })</ID>
+    <ID>MaxLineLength:MedStickerKeyGenerator.kt$MedStickerKeyGenerator$return org.bouncycastle.crypto.generators.SCrypt.generate(pin, salt, cpuCost, memoryCost, parallelizationParam, dkLen)</ID>
+    <ID>MaxLineLength:MedStickerSigner.kt$MedStickerSigner$return "${medStickerCipherAttr.version}-sha256:${Base64Encoder.base64(signBytes(medStickerCipherAttr.key, medStickerCipherAttr.iv, salt))}"</ID>
+    <ID>MaxLineLength:RsaOperationHelper.kt$RsaOperationHelper$return Build.VERSION.SDK_INT == Build.VERSION_CODES.M &amp;&amp; cipher != null &amp;&amp; (cipher.blockSize == 512 || cipher.blockSize == 0)</ID>
+    <ID>MaxLineLength:RsaOperationHelper.kt$RsaOperationHelper${ cipher = cipherProvider.invoke() // uses in this case the reduced block size of the Android 6.0 bug; reduced by the overhead of 11 that gets produced by the selected padding performCipher(inputBytes, 501, cipher) }</ID>
+    <ID>MayBeConst:RsaEcbOeapSha256AesGcmNoPadding.kt$RsaEcbOeapSha256AesGcmNoPadding.Companion$val VERSION = "oeapgcm"</ID>
+    <ID>MayBeConst:RsaEcbPkcs1AesCbcPkcs7.kt$RsaEcbPkcs1AesCbcPkcs7.Companion$val VERSION = "pkcscbc"</ID>
+    <ID>MemberNameEqualsClassName:Gzip.kt$Gzip$fun gzip(data: ByteArray): ByteArray</ID>
+    <ID>NewLineAtEndOfFile:EmergencyStickerEncryption.kt$com.vivy.medicalSticker.charlie.EmergencyStickerEncryption.kt</ID>
+    <ID>NewLineAtEndOfFile:EncryptedEmergencySticker.kt$com.vivy.medicalSticker.charlie.model.EncryptedEmergencySticker.kt</ID>
+    <ID>NewLineAtEndOfFile:EncryptedMedSticker.kt$com.vivy.medicalSticker.EncryptedMedSticker.kt</ID>
+    <ID>NewLineAtEndOfFile:EncryptedSharedPreferences.kt$com.vivy.localEncryption.EncryptedSharedPreferences.kt</ID>
+    <ID>NewLineAtEndOfFile:Exceptions.kt$com.vivy.e2e.Exceptions.kt</ID>
+    <ID>NewLineAtEndOfFile:FileEncryption.kt$com.vivy.localEncryption.FileEncryption.kt</ID>
+    <ID>NewLineAtEndOfFile:MedStickerCipherAttr.kt$com.vivy.medicalSticker.MedStickerCipherAttr.kt</ID>
+    <ID>NewLineAtEndOfFile:MedStickerEncryption.kt$com.vivy.medicalSticker.MedStickerEncryption.kt</ID>
+    <ID>NewLineAtEndOfFile:MedStickerKeyGenerator.kt$com.vivy.medicalSticker.MedStickerKeyGenerator.kt</ID>
+    <ID>NewLineAtEndOfFile:MedStickerSigner.kt$com.vivy.medicalSticker.MedStickerSigner.kt</ID>
+    <ID>NewLineAtEndOfFile:UserIdentifier.kt$com.vivy.localEncryption.UserIdentifier.kt</ID>
+    <ID>TooGenericExceptionCaught:AbstractAsymmetricSymmetricEncryption.kt$AbstractAsymmetricSymmetricEncryption$e: Throwable</ID>
+    <ID>TooGenericExceptionCaught:EmergencyStickerEncryption.kt$EmergencyStickerEncryption$e: Exception</ID>
+    <ID>TooGenericExceptionCaught:KeyConverter.kt$KeyConverter$e: Exception</ID>
+    <ID>TooGenericExceptionCaught:MedStickerEncryption.kt$MedStickerEncryption$e: Exception</ID>
+    <ID>TooGenericExceptionCaught:MedStickerKeyGenerator.kt$MedStickerKeyGenerator$e: Exception</ID>
+    <ID>TooGenericExceptionCaught:RsaEcbOeapSha256.kt$RsaEcbOeapSha256$e: Exception</ID>
+    <ID>TooGenericExceptionCaught:RsaEcbPkcs1.kt$RsaEcbPkcs1$e: Exception</ID>
+    <ID>TooGenericExceptionCaught:RsaOperationHelper.kt$RsaOperationHelper$e2: Exception</ID>
+    <ID>TooGenericExceptionCaught:RsaOperationHelper.kt$RsaOperationHelper$e: Exception</ID>
+    <ID>TooManyFunctions:EncryptedSharedPrefUtil.kt$EncryptedSharedPrefUtil$EncryptedSharedPrefUtil</ID>
+    <ID>TooManyFunctions:EncryptedSharedPreferences.kt$EncryptedSharedPreferences$EncryptedSharedPreferences</ID>
+    <ID>TooManyFunctions:KeyConverter.kt$KeyConverter$KeyConverter</ID>
+    <ID>VariableNaming:EncryptedSharedPrefUtil.kt$EncryptedSharedPrefUtil$private val GSON = GsonBuilder() .disableHtmlEscaping() .create()</ID>
+    <ID>VariableNaming:FileEncryption.kt$FileEncryption$private val GSON = GsonBuilder() .disableHtmlEscaping() .create()</ID>
+  </Whitelist>
 </SmellBaseline>
