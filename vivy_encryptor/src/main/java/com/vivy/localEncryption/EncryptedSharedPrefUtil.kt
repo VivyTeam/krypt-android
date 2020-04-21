@@ -124,7 +124,7 @@ open class EncryptedSharedPrefUtil(
                     GSON.fromJson(it, Encrypted::class.java)
                 }
                 .zipWith(
-                        keyProvider.privateKey,
+                        keyProvider.getPrivateKey(),
                         BiFunction<Encrypted, PrivateKey, ByteArray> { encrypted, privateKey ->
                             encrypt.decrypt(
                                     privateKey,
@@ -143,7 +143,7 @@ open class EncryptedSharedPrefUtil(
                 .map { it.toByteArray() }
                 .map { gzip.gzip(it) }
                 .zipWith(
-                        keyProvider.publicKey.toObservable(),
+                        keyProvider.getPublicKey().toObservable(),
                         BiFunction<ByteArray, PublicKey, Encrypted> { bytes, pubKey ->
                             encrypt.encrypt(pubKey, bytes)
                         })

@@ -32,7 +32,7 @@ class FileEncryption(private var keyProvider: KeyProvider) {
                 .map { base64.debase64(it) }
                 .map { String(it) }
                 .map { GSON.fromJson(it, E2EEncryption.Encrypted::class.java) }
-                .zipWith(keyProvider.privateKey, BiFunction<E2EEncryption.Encrypted, PrivateKey, ByteArray> { encrypted, privateKey ->
+                .zipWith(keyProvider.getPrivateKey(), BiFunction<E2EEncryption.Encrypted, PrivateKey, ByteArray> { encrypted, privateKey ->
                     encryptor.decrypt(privateKey, encrypted)
                 })
                 .map { gzip.gunzip(it) }
@@ -45,7 +45,7 @@ class FileEncryption(private var keyProvider: KeyProvider) {
     fun encrypt(byteArray: ByteArray): Single<ByteArray> {
         return Single.just(byteArray)
                 .map { gzip.gzip(it) }
-                .zipWith(keyProvider.publicKey, BiFunction<ByteArray, PublicKey, E2EEncryption.Encrypted> { bytes, pubKey ->
+                .zipWith(keyProvider.getPublicKey(), BiFunction<ByteArray, PublicKey, E2EEncryption.Encrypted> { bytes, pubKey ->
                     encryptor.encrypt(pubKey, bytes)
                 })
                 .map { GSON.toJson(it) }
