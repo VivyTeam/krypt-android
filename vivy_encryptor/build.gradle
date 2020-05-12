@@ -52,12 +52,12 @@ android {
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     api commonDependencies.timber
-    api commonDependencies.gson
+    api commonDependencies.google.gson
     api commonDependencies.rxJava2
     api commonDependencies.options
-    api commonDependencies.guava
+    api commonDependencies.google.guava
     api commonDependencies.bouncyCastle
-    api commonDependencies.elepticCurve
+    api commonDependencies.google.elepticCurve
 
     testImplementation 'junit:junit:4.12'
     androidTestImplementation commonTestDependencies.testRunner
