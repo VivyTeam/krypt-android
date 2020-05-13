@@ -15,12 +15,14 @@ ext {
 
     commonDependencies = [rxAndroid   : "io.reactivex.rxjava2:rxandroid:${rxAndroid}",
                           timber      : "com.jakewharton.timber:timber:${timber}",
-                          gson        : "com.google.code.gson:gson:${gson}",
                           rxJava2     : "io.reactivex.rxjava2:rxjava:${rxJava2}",
                           options     : "com.github.tomaszpolanski:options:${options}",
-                          guava       : "com.google.guava:guava:$guava",
                           bouncyCastle: "org.bouncycastle:bcpkix-jdk15on:${bouncyCastle}",
-                          elepticCurve: "com.google.crypto.tink:tink-android:${elliptic}",
+        google: [
+            gson        : "com.google.code.gson:gson:${gson}",
+            guava       : "com.google.guava:guava:$guava",
+            elepticCurve: "com.google.crypto.tink:tink-android:${elliptic}",
+        ]
     ]
 
     commonTestDependencies = [testRunner             : "androidx.test:runner:$androidX",
