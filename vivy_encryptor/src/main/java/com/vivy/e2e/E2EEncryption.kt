@@ -1,6 +1,7 @@
 package com.vivy.e2e
 
 import com.google.gson.annotations.SerializedName
+import java.io.Serializable
 import java.security.PrivateKey
 import java.security.PublicKey
 
@@ -22,6 +23,6 @@ interface E2EEncryption {
             @SerializedName("data") var data: ByteArray,
             @SerializedName("cipher") var cipher: String,
             @SerializedName("version") var version: String
-    )
+    ): Serializable
 
 }
