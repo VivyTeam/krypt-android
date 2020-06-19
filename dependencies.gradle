@@ -11,13 +11,16 @@ ext {
     androidX = '1.1.0'
     rxAndroid = '2.1.1'
     assertJ = '3.14.0'
-
+    securityCrypto = '1.0.0-rc02'
 
     commonDependencies = [rxAndroid   : "io.reactivex.rxjava2:rxandroid:${rxAndroid}",
                           timber      : "com.jakewharton.timber:timber:${timber}",
                           rxJava2     : "io.reactivex.rxjava2:rxjava:${rxJava2}",
                           options     : "com.github.tomaszpolanski:options:${options}",
                           bouncyCastle: "org.bouncycastle:bcpkix-jdk15on:${bouncyCastle}",
+        androidx: [
+            securityCrypto: "androidx.security:security-crypto:${securityCrypto}"
+        ],
         google: [
             gson        : "com.google.code.gson:gson:${gson}",
             guava       : "com.google.guava:guava:$guava",
