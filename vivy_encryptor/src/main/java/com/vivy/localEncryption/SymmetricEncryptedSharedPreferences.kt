@@ -9,6 +9,7 @@ import io.reactivex.Single
 import polanski.option.Option
 import com.vivy.localEncryption.EncryptedSharedPreferences as VivyEncryptedSharedPreferences
 
+@Suppress("TooManyFunctions")
 class SymmetricEncryptedSharedPreferences(
     private val storage: EncryptedSharedPreferences,
     private val userIdentifier: UserIdentifier,
