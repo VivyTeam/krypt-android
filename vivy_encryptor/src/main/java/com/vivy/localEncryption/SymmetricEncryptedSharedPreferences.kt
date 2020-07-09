@@ -6,7 +6,6 @@ import io.reactivex.Completable
 import io.reactivex.Maybe
 import io.reactivex.Observable
 import io.reactivex.Single
-import java.util.Optional
 import com.vivy.localEncryption.EncryptedSharedPreferences as VivyEncryptedSharedPreferences
 
 class SymmetricEncryptedSharedPreferences(
@@ -64,7 +63,7 @@ class SymmetricEncryptedSharedPreferences(
     }
     //endregion delete
 
-    //region get Maybe
+    //region getMaybe
     override fun getMaybe(
         key: String
     ): Maybe<String> {
@@ -104,51 +103,7 @@ class SymmetricEncryptedSharedPreferences(
                 value
             }
     }
-    //endregion get
-
-    override fun getOptional(
-        key: String
-    ): Single<Optional<String>> {
-        return getOptional(key, userIdentifier.getId())
-    }
-
-    override fun getOptional(
-        key: String,
-        user: String
-    ): Single<Optional<String>> {
-        return isEntryAvailable(key, user)
-            .map { available ->
-                if (!available) {
-                    Optional.empty()
-                } else {
-                    val value = storage.getString(key + user, "") ?: ""
-                    Optional.of(value)
-                }
-            }
-    }
-
-    override fun <J> getOptional(
-        key: String,
-        clazz: Class<J>
-    ): Single<Optional<J>> {
-        return getOptional(key, userIdentifier.getId(), clazz)
-    }
-
-    override fun <J> getOptional(
-        key: String,
-        user: String,
-        clazz: Class<J>
-    ): Single<Optional<J>> {
-        return getOptional(key, user)
-            .map { optionalValue ->
-                if (!optionalValue.isPresent) {
-                    Optional.empty()
-                } else {
-                    val value = gson.fromJson(optionalValue.get(), clazz)
-                    Optional.of(value)
-                }
-            }
-    }
+    //endregion getMaybe
 
     //region available
     override fun isEntryAvailable(

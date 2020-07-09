@@ -4,7 +4,6 @@ import io.reactivex.Completable
 import io.reactivex.Maybe
 import io.reactivex.Observable
 import io.reactivex.Single
-import java.util.Optional
 
 interface EncryptedSharedPreferences {
 
@@ -45,14 +44,14 @@ interface EncryptedSharedPreferences {
     //endregion delete
 
     //region get deprecated
-    @Deprecated("use @getMaybe or @getOptional instead", ReplaceWith("getMaybe(key)"))
+    @Deprecated("use @getMaybe instead", ReplaceWith("getMaybe(key)"))
     fun get(
         key: String
     ): Single<com.google.common.base.Optional<String>> {
         return Single.just(com.google.common.base.Optional.absent())
     }
 
-    @Deprecated("use @getMaybe or @getOptional instead", ReplaceWith("getMaybe(key)"))
+    @Deprecated("use @getMaybe instead", ReplaceWith("getMaybe(key, user)"))
     fun get(
         key: String,
         user: String
@@ -60,7 +59,7 @@ interface EncryptedSharedPreferences {
         return Single.just(com.google.common.base.Optional.absent())
     }
 
-    @Deprecated("use @getMaybe or @getOptional instead", ReplaceWith("getMaybe(key)"))
+    @Deprecated("use @getMaybe instead", ReplaceWith("getMaybe(key, clazz)"))
     fun <J> get(
         key: String,
         clazz: Class<J>
@@ -98,36 +97,6 @@ interface EncryptedSharedPreferences {
         return Maybe.empty()
     }
     //endregion getMaybe
-
-    //region getOptional
-    fun getOptional(
-        key: String
-    ): Single<Optional<String>> {
-        return Single.just(Optional.empty())
-    }
-
-    fun getOptional(
-        key: String,
-        user: String
-    ): Single<Optional<String>> {
-        return Single.just(Optional.empty())
-    }
-
-    fun <J> getOptional(
-        key: String,
-        clazz: Class<J>
-    ): Single<Optional<J>> {
-        return Single.just(Optional.empty())
-    }
-
-    fun <J> getOptional(
-        key: String,
-        user: String,
-        clazz: Class<J>
-    ): Single<Optional<J>> {
-        return Single.just(Optional.empty())
-    }
-    //endregion getOptional
 
     //region available
     fun isEntryAvailable(
