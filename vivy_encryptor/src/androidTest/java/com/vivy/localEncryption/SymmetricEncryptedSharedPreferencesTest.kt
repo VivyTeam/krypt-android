@@ -76,8 +76,8 @@ class SymmetricEncryptedSharedPreferencesTest {
 
         val option = storage.get(key, TestObject::class.java).blockingGet()
 
-        Assert.assertTrue(option.isSome)
-        Assert.assertEquals(expectedResult, option.orDefault { null })
+        Assert.assertTrue(option.isPresent)
+        Assert.assertEquals(expectedResult, option.orElseGet { null })
     }
 
     @Test

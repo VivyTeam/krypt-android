@@ -63,7 +63,7 @@ class SharedPrefEncryptionTest {
         val option = encryptedSharedPrefUtil.decrypt(encryptedMessage)
                 .blockingGet()
         assertTrue(option.isPresent)
-        val decryptedMessage = option.or("")
+        val decryptedMessage = option.orElse("")
         assertEquals(encrypted, decryptedMessage)
     }
 
@@ -194,7 +194,7 @@ class SharedPrefEncryptionTest {
         val keyForObject = "KEY_FOR_OBJECT"
         val objectToSave = TestClass("TestString", 123)
         encryptedSharedPrefUtil.update(keyForObject, objectToSave).blockingFirst()
-        val retrievedValue = encryptedSharedPrefUtil.get(keyForObject, TestClass::class.java).blockingGet().orDefault { null }
+        val retrievedValue = encryptedSharedPrefUtil.get(keyForObject, TestClass::class.java).blockingGet().orElseGet { null }
         assertEquals(objectToSave, retrievedValue)
     }
 

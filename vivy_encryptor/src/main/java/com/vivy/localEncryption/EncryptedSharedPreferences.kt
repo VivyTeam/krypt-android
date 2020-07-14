@@ -1,10 +1,9 @@
 package com.vivy.localEncryption
 
-import com.google.common.base.Optional
 import io.reactivex.Completable
 import io.reactivex.Observable
 import io.reactivex.Single
-import polanski.option.Option
+import java.util.*
 
 interface EncryptedSharedPreferences {
     fun update(
@@ -51,7 +50,7 @@ interface EncryptedSharedPreferences {
     fun <J> get(
             key: String,
             clazz: Class<J>
-    ): Single<Option<J>>
+    ): Single<Optional<J>>
 
 
     fun isEntryAvailable(

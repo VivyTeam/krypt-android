@@ -1,12 +1,11 @@
 package com.vivy.localEncryption
 
 import androidx.security.crypto.EncryptedSharedPreferences
-import com.google.common.base.Optional
 import com.google.gson.Gson
 import io.reactivex.Completable
 import io.reactivex.Observable
 import io.reactivex.Single
-import polanski.option.Option
+import java.util.*
 import com.vivy.localEncryption.EncryptedSharedPreferences as VivyEncryptedSharedPreferences
 
 @Suppress("TooManyFunctions")
@@ -57,7 +56,7 @@ class SymmetricEncryptedSharedPreferences(
         return isEntryAvailable(key, user)
             .map { available ->
                 if (!available) {
-                    Optional.absent()
+                    Optional.empty()
                 } else {
                     val value = storage.getString(key + user, "") ?: ""
                     Optional.of(value)
@@ -65,13 +64,13 @@ class SymmetricEncryptedSharedPreferences(
             }
     }
 
-    override fun <J> get(key: String, clazz: Class<J>): Single<Option<J>> {
+    override fun <J> get(key: String, clazz: Class<J>): Single<Optional<J>> {
         return get(key, userIdentifier.getId())
             .map {
                 if (it.isPresent) {
-                    Option.ofObj(gson.fromJson(it.get(), clazz))
+                    Optional.of(gson.fromJson(it.get(), clazz))
                 } else {
-                    Option.none()
+                    Optional.empty()
                 }
             }
     }

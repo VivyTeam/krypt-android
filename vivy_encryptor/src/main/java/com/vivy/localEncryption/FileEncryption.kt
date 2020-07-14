@@ -1,6 +1,6 @@
 package com.vivy.localEncryption
 
-import com.google.common.base.Optional
+import java.util.Optional
 import com.google.gson.GsonBuilder
 import com.vivy.e2e.E2EEncryption
 import com.vivy.e2e.EHREncryption
@@ -36,9 +36,9 @@ class FileEncryption(private var keyProvider: KeyProvider) {
                     encryptor.decrypt(privateKey, encrypted)
                 })
                 .map { gzip.gunzip(it) }
-                .map { Optional.fromNullable(it) }
+                .map { Optional.ofNullable(it) }
                 .doOnError { Timber.e(it) }
-                .onErrorReturnItem(Optional.absent())
+                .onErrorReturnItem(Optional.empty())
 
     }
 

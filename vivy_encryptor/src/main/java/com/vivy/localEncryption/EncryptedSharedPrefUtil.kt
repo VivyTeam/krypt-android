@@ -1,7 +1,6 @@
 package com.vivy.localEncryption
 
 import android.content.SharedPreferences
-import com.google.common.base.Optional
 import com.google.gson.GsonBuilder
 import com.vivy.e2e.E2EEncryption.Encrypted
 import com.vivy.e2e.EHREncryption
@@ -12,10 +11,10 @@ import io.reactivex.Completable
 import io.reactivex.Observable
 import io.reactivex.Single
 import io.reactivex.functions.BiFunction
-import polanski.option.Option
 import timber.log.Timber
 import java.security.PrivateKey
 import java.security.PublicKey
+import java.util.*
 
 open class EncryptedSharedPrefUtil(
         private val sharedPreferences: SharedPreferences,
@@ -76,20 +75,20 @@ open class EncryptedSharedPrefUtil(
             encrypted?.let {
 
                 decrypt(it)
-            } ?: Single.just(Optional.absent())
+            } ?: Single.just(Optional.empty())
         }
     }
 
     override fun <J> get(
             key: String,
             clazz: Class<J>
-    ): Single<Option<J>> {
+    ): Single<Optional<J>> {
         return get(key, userIdentifier.getId())
                 .filter { it.isPresent }
-                .map { it.or("") }
-                .map { Option.tryAsOption<J> { GSON.fromJson(it, clazz) } }
-                .onErrorReturn { Option.none() }
-                .toSingle(Option.none())
+                .map { it.orElse("") }
+                .map { Optional.of(GSON.fromJson(it, clazz)) }
+                .onErrorReturn { Optional.empty() }
+                .toSingle(Optional.empty())
 
     }
 
@@ -132,8 +131,8 @@ open class EncryptedSharedPrefUtil(
                             )
                         })
                 .map { gzip.gunzip(it) }
-                .map { Optional.fromNullable(String(it)) }
-                .onErrorReturnItem(Optional.absent())
+                .map { Optional.ofNullable(String(it)) }
+                .onErrorReturnItem(Optional.empty())
                 .doOnError { Timber.d(it) }
 
     }
