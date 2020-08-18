@@ -57,9 +57,9 @@ dependencies {
     api commonDependencies.options
     api commonDependencies.google.guava
     api commonDependencies.bouncyCastle
+    api commonDependencies.bouncyCastlePGP
     api commonDependencies.google.elepticCurve
     api commonDependencies.androidx.securityCrypto
-
 
     testImplementation 'junit:junit:4.12'
     androidTestImplementation commonTestDependencies.testRunner
