@@ -14,7 +14,7 @@ class SHA256PGPDigestCalculator : PGPDigestCalculator {
 
     init {
         try {
-            digest = MessageDigest.getInstance("SHA256")
+            digest = MessageDigest.getInstance("SHA-256")
         } catch (e: NoSuchAlgorithmException) {
             throw IllegalStateException("cannot find SHA-256: " + e.message)
         }
@@ -41,8 +41,7 @@ class SHA256PGPDigestCalculator : PGPDigestCalculator {
     }
 
     fun getHash(bytes: ByteArray): ByteArray {
-        digest.update(bytes)
-        val hash = digest.digest()
+        val hash = digest.digest(bytes)
         digest.reset()
         return hash
     }
