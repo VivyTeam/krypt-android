@@ -11,7 +11,7 @@ ext {
   androidX = '1.1.0'
   rxAndroid = '2.1.1'
   assertJ = '3.14.0'
-  securityCrypto = '1.0.0-rc02'
+  securityCrypto = '1.0.0-rc03'
 
   commonDependencies = [rxAndroid      : "io.reactivex.rxjava2:rxandroid:${rxAndroid}",
                         timber         : "com.jakewharton.timber:timber:${timber}",
