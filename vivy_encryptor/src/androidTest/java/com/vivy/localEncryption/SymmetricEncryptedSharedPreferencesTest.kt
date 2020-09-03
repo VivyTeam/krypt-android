@@ -30,7 +30,7 @@ class SymmetricEncryptedSharedPreferencesTest {
         storage = SymmetricEncryptedSharedPreferences(encryptedSharedPreferences, userIdentifier, gson)
     }
 
-    //update
+    //region update
 
     @Test
     fun updateKeyForCurrentUser() {
@@ -41,10 +41,10 @@ class SymmetricEncryptedSharedPreferencesTest {
 
         storage.update(key, expectedResult).blockingFirst()
 
-        val option = storage.get(key, testEmail).blockingGet()
-
-        Assert.assertTrue(option.isPresent)
-        Assert.assertEquals(expectedResult, option.get())
+        storage.getMaybe(key, testEmail).test()
+            .assertValue {
+                it == expectedResult
+            }
     }
 
     @Test
@@ -57,12 +57,15 @@ class SymmetricEncryptedSharedPreferencesTest {
 
         storage.update(key, expectedResult, specificTestEmail).blockingFirst()
 
-        val option = storage.get(key, specificTestEmail).blockingGet()
-        val optionCurrentUser = storage.get(key, testEmail).blockingGet()
+        storage.getMaybe(key, specificTestEmail)
+            .test()
+            .assertValue {
+                it == expectedResult
+            }
 
-        Assert.assertTrue(option.isPresent)
-        Assert.assertTrue(!optionCurrentUser.isPresent)
-        Assert.assertEquals(expectedResult, option.get())
+        storage.getMaybe(key, testEmail)
+            .test()
+            .assertResult()
     }
 
     @Test
@@ -74,10 +77,10 @@ class SymmetricEncryptedSharedPreferencesTest {
 
         storage.update(key, expectedResult).blockingFirst()
 
-        val option = storage.get(key, TestObject::class.java).blockingGet()
-
-        Assert.assertTrue(option.isSome)
-        Assert.assertEquals(expectedResult, option.orDefault { null })
+        storage.getMaybe(key, TestObject::class.java).test()
+            .assertValue {
+                it == expectedResult
+            }
     }
 
     @Test
@@ -90,14 +93,15 @@ class SymmetricEncryptedSharedPreferencesTest {
 
         storage.update(key, expectedResult, specificTestEmail).blockingFirst()
 
-        val option = storage.get(key, specificTestEmail).blockingGet()
-        val deserialisedResult = gson.fromJson(option.get(), TestObject::class.java)
-
-        Assert.assertTrue(option.isPresent)
-        Assert.assertEquals(expectedResult, deserialisedResult)
+        storage.getMaybe(key, specificTestEmail, TestObject::class.java).test()
+            .assertValue {
+                it == expectedResult
+            }
     }
 
-    //delete
+    //endregion update
+
+    //region delete
 
     @Test
     fun deleteKeyForCurrentUser() {
@@ -109,9 +113,9 @@ class SymmetricEncryptedSharedPreferencesTest {
         storage.update(key, expectedResult).blockingFirst()
         storage.delete(key).blockingGet()
 
-        val option = storage.get(key, testEmail).blockingGet()
-
-        Assert.assertTrue(!option.isPresent)
+        storage.getMaybe(key, testEmail)
+            .test()
+            .assertResult()
     }
 
     @Test
@@ -125,12 +129,13 @@ class SymmetricEncryptedSharedPreferencesTest {
         storage.update(key, expectedResult, specificTestEmail).blockingFirst()
         storage.delete(key, specificTestEmail).blockingGet()
 
-        val option = storage.get(key, specificTestEmail).blockingGet()
-
-        Assert.assertTrue(!option.isPresent)
+        storage.getMaybe(key, specificTestEmail)
+            .test()
+            .assertResult()
     }
+    //endregion delete
 
-    //isEntryAvailable
+    //region available
 
     @Test
     fun isEntryAvailableForCurrentUserForExistingKey() {
@@ -141,9 +146,7 @@ class SymmetricEncryptedSharedPreferencesTest {
 
         storage.update(key, value).blockingFirst()
 
-        val result = storage.isEntryAvailable(key, testEmail).blockingGet()
-
-        Assert.assertEquals(result, true)
+        storage.isEntryAvailable(key, testEmail).test().assertValue(true)
     }
 
     @Test
@@ -152,9 +155,7 @@ class SymmetricEncryptedSharedPreferencesTest {
 
         val key = "KEY_TEST_UNKNOWN_KEY_FOR_CURRENT_USER"
 
-        val result = storage.isEntryAvailable(key, testEmail).blockingGet()
-
-        Assert.assertEquals(result, false)
+        storage.isEntryAvailable(key, testEmail).test().assertValue(false)
     }
 
     @Test
@@ -184,7 +185,9 @@ class SymmetricEncryptedSharedPreferencesTest {
         Assert.assertEquals(result, false)
     }
 
-    //get
+    //endregion available
+
+    //region geMaybe
 
     @Test
     fun getKeyForCurrentUser() {
@@ -195,11 +198,12 @@ class SymmetricEncryptedSharedPreferencesTest {
 
         storage.update(key, expectedResult).blockingFirst()
 
-        val option = storage.get(key).blockingGet()
-
-        Assert.assertTrue(option.isPresent)
-        Assert.assertEquals(expectedResult, option.get())
+        storage.getMaybe(key)
+            .test()
+            .assertValue { it == expectedResult }
     }
+
+    //endregion getMaybe
 
     private fun setupEncryptedSharedPreferences(): EncryptedSharedPreferences {
         val instrumentation = InstrumentationRegistry.getInstrumentation()
