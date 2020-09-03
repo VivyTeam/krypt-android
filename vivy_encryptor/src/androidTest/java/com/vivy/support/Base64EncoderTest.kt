@@ -20,6 +20,10 @@ class Base64EncoderTest {
 
         val unBase64String = base64.debase64(basedString)
 
+        val unBase64StringUrl = base64.debase64Url(basedString)
+
         assertThat(targetString, equalTo(String(unBase64String, StandardCharsets.UTF_8)))
+
+        assertThat(targetString, equalTo(String(unBase64StringUrl, StandardCharsets.UTF_8)))
     }
 }

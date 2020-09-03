@@ -12,4 +12,8 @@ object Base64Encoder {
     fun debase64(targetString: String): ByteArray {
         return Base64.decode(targetString.toByteArray(StandardCharsets.UTF_8), Base64.NO_WRAP)
     }
+
+    fun debase64Url(targetString: String): ByteArray {
+        return Base64.decode(targetString.toByteArray(StandardCharsets.UTF_8), Base64.URL_SAFE)
+    }
 }
