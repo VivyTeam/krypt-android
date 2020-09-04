@@ -7,15 +7,16 @@ import java.security.PublicKey
 import java.security.Signature
 import java.security.SignatureException
 
-object RSASignatureValidator {
+object SignatureAlgorithmValidator {
 
     fun verifyDigitalSignature(
         payload: String,
         signedPayload: ByteArray,
-        publicKey: PublicKey
+        publicKey: PublicKey,
+        algorithm: SignatureAlgorithm
     ): Boolean {
         return try {
-            val signature = Signature.getInstance("SHA256withRSA")
+            val signature = Signature.getInstance(algorithm.jcaName)
             signature.initVerify(publicKey)
             signature.update(payload.toByteArray())
             signature.verify(signedPayload)
