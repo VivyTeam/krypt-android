@@ -11,7 +11,7 @@ import java.security.Signature
 class SignatureAlgorithmValidatorTest {
 
     object RS256 {
-        val alg = "SHA256withRSA"
+        val alg = SignatureAlgorithm.RS256
         val publicKey =
 """-----BEGIN PUBLIC KEY-----
 MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAzGVjnzCv8L1tCPZ5UtL1
@@ -34,7 +34,7 @@ lA8G3CkDUaXCulBv/HlTixHoIFF2ejnhAI3vsFq5uYJ3JVGSK3LLm5AzTu24mFPg
     }
 
     object RS512 {
-        val alg = "SHA512withRSA"
+        val alg = SignatureAlgorithm.RS512
         val publicKey =
 """-----BEGIN PUBLIC KEY-----
 MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAnzyis1ZjfNB0bBgKFMSv
@@ -94,8 +94,7 @@ MwIDAQAB
         signature.update(message.toByteArray())
         val signatureBytes = signature.sign()
 
-        val isValid = SignatureAlgorithmValidator.verifyDigitalSignature(message, signatureBytes, pubKey, "SHA512withRSA"
-        )
+        val isValid = SignatureAlgorithmValidator.verifyDigitalSignature(message, signatureBytes, pubKey, SignatureAlgorithm.RS512)
         assertEquals(false, isValid)
     }
 

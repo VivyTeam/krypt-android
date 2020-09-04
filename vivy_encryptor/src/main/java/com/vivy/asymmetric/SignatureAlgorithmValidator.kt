@@ -13,10 +13,10 @@ object SignatureAlgorithmValidator {
         payload: String,
         signedPayload: ByteArray,
         publicKey: PublicKey,
-        algorithm: String
+        algorithm: SignatureAlgorithm
     ): Boolean {
         return try {
-            val signature = Signature.getInstance(algorithm)
+            val signature = Signature.getInstance(algorithm.jcaName)
             signature.initVerify(publicKey)
             signature.update(payload.toByteArray())
             signature.verify(signedPayload)
