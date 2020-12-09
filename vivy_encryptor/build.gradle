@@ -55,7 +55,6 @@ android {
 
 afterEvaluate {
     publishing {
-
         repositories {
             maven {
                 name = "GitHubPackages"
