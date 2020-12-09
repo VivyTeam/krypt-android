@@ -1,3 +1,7 @@
+plugins {
+    id "maven-publish"
+}
+
 apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
 
@@ -46,6 +50,33 @@ android {
 
     lintOptions {
         warning 'InvalidPackage'
+    }
+}
+
+afterEvaluate {
+    publishing {
+
+        repositories {
+            maven {
+                name = "GitHubPackages"
+                url = uri("https://maven.pkg.github.com/VivyTeam/packages")
+                credentials {
+                    username = project.findProperty("usr") as String ?: System.getenv("GITHUB_ACTOR")
+                    password = project.findProperty("key") as String ?: System.getenv("GITHUB_TOKEN")
+                }
+            }
+        }
+
+        publications {
+            debug(MavenPublication) {
+                // Applies the component for the debug build variant.
+                from components.debug
+
+                groupId project.findProperty("groupId")
+                artifactId project.findProperty("artifactId")
+                version System.getenv("VERSION") ?: project.findProperty("version")
+            }
+        }
     }
 }
 
