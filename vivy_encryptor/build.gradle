@@ -53,6 +53,9 @@ android {
     }
 }
 
+Properties properties = new Properties()
+properties.load(project.rootProject.file('local.properties').newDataInputStream())
+
 afterEvaluate {
     publishing {
 
@@ -61,16 +64,16 @@ afterEvaluate {
                 name = "GitHubPackages"
                 url = uri("https://maven.pkg.github.com/VivyTeam/packages")
                 credentials {
-                    username = project.findProperty("usr") as String ?: System.getenv("GITHUB_ACTOR")
-                    password = project.findProperty("key") as String ?: System.getenv("GITHUB_TOKEN")
+                    username = properties.getProperty("usr") as String ?: System.getenv("GITHUB_ACTOR")
+                    password = properties.getProperty("key") as String ?: System.getenv("GITHUB_TOKEN")
                 }
             }
         }
 
         publications {
-            debug(MavenPublication) {
+            release(MavenPublication) {
                 // Applies the component for the debug build variant.
-                from components.debug
+                from components.release
 
                 groupId project.findProperty("groupId")
                 artifactId project.findProperty("artifactId")
