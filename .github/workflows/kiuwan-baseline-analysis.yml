@@ -1,0 +1,21 @@
+name: Kiuwan Baseline Analysis
+
+on:
+  push:
+    branches: [ master ]
+
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Kiuwan Baseline Analysis
+        uses: VivyTeam/KiuwanBaselineAction@5fe31c724672c06060af11af716f5e604ce17c8e
+        with:
+          userid: ${{ secrets.KIUWAN_USER }}
+          password: ${{ secrets.KIUWAN_PASS }}
